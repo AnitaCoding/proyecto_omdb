@@ -25,7 +25,6 @@ function show_search_results(data){
                                 <p class="subtitle is-6">${element.Year}</p>
                             </div>
                         </div>
-                        <button onclick="searchById('tt1201607')">ver más</button>
                     </div>
                 </div>
             </div>`
@@ -56,13 +55,44 @@ function set_url(){
     return searchUrl
 }
 
+function show_movie(data){
+    let card = '';
+    card = `<div class="cell" id = ${data.imdbID}>
+            <div class="card" >
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                    <img
+                        src="${data.Poster}"
+                        alt="Placeholder image"
+                    />
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4">${data.Title}</p>
+                            <p class="subtitle is-6">${data.Released}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content">
+                ${data.Plot}
+                </div>
+            </div>
+        </div>`
+    //Insertar la categoría cargada dentro del grid
+    moviesGrid.innerHTML = card;  
+    
+}
+
 function searchById(id){
     const url = `http://localhost:8000/movies/${id}?apiKey=${apiKeyValue}`;
     console.log(url)
     fetch(url)
     .then(response => response.json())
     .then(data =>
-        console.log(data)
+        show_movie(data)
     ).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
@@ -74,10 +104,7 @@ function get_movie_by_id(){
         //onclick es un método que se puede asociar a cualquier elemento
         allMoviesCards[i].onclick = function(){
             let id = allMoviesCards[i].id;
-            
-        
-            searchById(id)
-        moviesGrid.innerHTML = 'mostrandopeli'
+        searchById(id)
         }
     }
 }
@@ -85,6 +112,3 @@ function get_movie_by_id(){
 moviesGrid.addEventListener('click', get_movie_by_id)
 
 
-function hello(){
-    console.log('hello')
-}
