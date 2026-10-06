@@ -27,22 +27,22 @@ def get_movies_by_year(title, year, apiKey):
     movies_list = movies.json()
     return movies_list
 
-def get_movie_by_id(id, apiKey):
-    movie = consulta.get(f"http://www.omdbapi.com/?i={id}&apikey={apiKey}")
+def get_movie_by_id(imdb_id, apiKey):
+    movie = consulta.get(f"http://www.omdbapi.com/?i={imdb_id}&apikey={apiKey}")
     selected_movie = movie.json()
     return selected_movie
 
 @app.get("/movies/{title}/{apikey}", tags=['Movies'])
-def index(title, apiKey):
+def index(title:str, apiKey:str):
     return get_movies(title, apiKey)
     
 @app.get("/movies/{title}/{year}/{apikey}", tags=['Movies'])
-def select_movies_year(title, year, apiKey):
+def select_movies_year(title:str, year:str, apiKey:str):
     return get_movies_by_year(title, year, apiKey)
 
-@app.get("/movies/{id}/{apikey}", tags=['Movies'])
-def select_movie_by_id(id, apiKey):
-    return get_movie_by_id(id, apiKey)
+@app.get("/movies/{imdb_id}", tags=['Movies'])
+def select_movie_by_id(imdb_id: str, apiKey:str):
+    return get_movie_by_id(imdb_id, apiKey)
 
 #Getters BD
 

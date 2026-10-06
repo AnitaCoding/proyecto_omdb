@@ -25,7 +25,7 @@ function show_search_results(data){
                                 <p class="subtitle is-6">${element.Year}</p>
                             </div>
                         </div>
-                        <button onclick="searchById(tt1201607)">ver más</button>
+                        <button onclick="searchById('tt1201607')">ver más</button>
                     </div>
                 </div>
             </div>`
@@ -57,11 +57,12 @@ function set_url(){
 }
 
 function searchById(id){
-    const url = `http://127.0.0.1:8000/movies/${id}/{apikey}?apiKey=${apiKeyValue}`
+    const url = `http://localhost:8000/movies/${id}?apiKey=${apiKeyValue}`;
+    console.log(url)
     fetch(url)
     .then(response => response.json())
     .then(data =>
-        console.log(data.Title)
+        console.log(data)
     ).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
