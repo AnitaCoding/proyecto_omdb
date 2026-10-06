@@ -25,6 +25,7 @@ function show_search_results(data){
                                 <p class="subtitle is-6">${element.Year}</p>
                             </div>
                         </div>
+                        <button onclick="searchById(tt1201607)">ver más</button>
                     </div>
                 </div>
             </div>`
@@ -36,8 +37,8 @@ function show_search_results(data){
 searchBtn.addEventListener('click', get_movies_by_search)
 
 function get_movies_by_search(){
-    //set_url()
-    fetch(`http://127.0.0.1:8000/movies/${titleInput.value}/{apikey}?apiKey=${apiKeyValue}`)
+    const url = set_url()
+    fetch(url)
     .then(response => response.json())
     .then(data =>
         show_search_results(data)
@@ -46,20 +47,21 @@ function get_movies_by_search(){
 
 //Una función que controle si hay año o no. Si hay año, que lo añada a la búsqueda. 
 function set_url(){
+    let searchUrl = ''
     if(yearInput.value.length == 0){
-        searchUrl = `http://www.omdbapi.com/?s="${titleInput.value}"&type=movie&apikey=${apiKeyValue}`
+        searchUrl = `http://127.0.0.1:8000/movies/${titleInput.value}/{apikey}?apiKey=${apiKeyValue}`
     }else{
-        searchUrl = `http://www.omdbapi.com/?s=${titleInput.value}&type=movie&y=${yearInput.value}&apikey=${apiKeyValue}`
+        searchUrl = `http://127.0.0.1:8000/movies/${titleInput.value}/${yearInput.value}/{apikey}?apiKey=${apiKeyValue}`
     }
-
+    return searchUrl
 }
 
 function searchById(id){
-    const url = `http://www.omdbapi.com/?i="${id}"&apikey=${apiKeyValue}`
+    const url = `http://127.0.0.1:8000/movies/${id}/{apikey}?apiKey=${apiKeyValue}`
     fetch(url)
     .then(response => response.json())
     .then(data =>
-        console.log('mostrando película')
+        console.log(data.Title)
     ).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
@@ -71,8 +73,9 @@ function get_movie_by_id(){
         //onclick es un método que se puede asociar a cualquier elemento
         allMoviesCards[i].onclick = function(){
             let id = allMoviesCards[i].id;
+            
         
-        searchById(id)
+            searchById(id)
         moviesGrid.innerHTML = 'mostrandopeli'
         }
     }

@@ -32,7 +32,7 @@ def get_movie_by_id(id, apiKey):
     selected_movie = movie.json()
     return selected_movie
 
-@app.get("/movies/{title}/{apikey}", tags=['movies'])
+@app.get("/movies/{title}/{apikey}", tags=['Movies'])
 def index(title, apiKey):
     return get_movies(title, apiKey)
     
