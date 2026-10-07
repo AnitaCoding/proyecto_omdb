@@ -9,14 +9,14 @@ function show_search_results(data){
     let cards = '';
     data['Search'].forEach(element => {
         //cards += `<button id=${element.imdbID}>${element.Title}</button>`
-        cards += `<div class="cell" id = ${element.imdbID}>
-                <div class="card" >
+        cards += `<div class="cell" id=${element.imdbID}>
+                <div class="card">
                     <div class="card-image">
                         <figure class="image is-4by3">
-                        <img
-                            src="${element.Poster}"
-                            alt="Placeholder image"
-                        />
+                            <img
+                                src="${element.Poster}"
+                                alt="Placeholder image"
+                            />
                         </figure>
                     </div>
                     <div class="card-content">
@@ -24,7 +24,7 @@ function show_search_results(data){
                             <div class="media-content">
                                 <p class="title is-4">${element.Title}</p>
                                 <p class="subtitle is-6">${element.Year}</p>
-                                <button onclick="get_movie_by_id(${element.id})">ver más</button>
+                                <button class="button is-primary card-button" >ver más</button>
                             </div>
                         </div>
                     </div>
@@ -73,12 +73,6 @@ function show_form(){
                     <div class="control">
                         <textarea class="textarea" placeholder="Escribe tu opinión"></textarea>
                     </div>
-                </div>
-
-                <div class="field">
-                    <div class="control">
-                        <button class="button is-primary">Enviar</button>
-                    </div>
                 </div>`
 
     formElement.innerHTML = form
@@ -90,10 +84,10 @@ function show_movie(data){
             <div class="card" >
                 <div class="card-image">
                     <figure class="image is-4by3">
-                    <img
-                        src="${data.Poster}"
-                        alt="Placeholder image"
-                    />
+                        <img
+                            src="${data.Poster}"
+                            alt="Placeholder image"
+                        />
                     </figure>
                 </div>
                 <div class="card-content">
@@ -127,39 +121,16 @@ function searchById(id){
 }
 
 function get_movie_by_id(){
-    const allMoviesCards = moviesGrid.querySelectorAll('*')
+    const allMoviesCards = moviesGrid.querySelectorAll('div.cell')
     for (let i = 0; i < allMoviesCards.length; i++){
         //acceso a recorrido del contenido de tabla por posición con función onclick
         //rows es una propiedad de la etiqueta table, que a su vez, tiene la propiedad onclick
         //onclick es un método que se puede asociar a cualquier elemento
         allMoviesCards[i].onclick = function(){
             let id = allMoviesCards[i].id;
-        searchById(id)
+            searchById(id)
         }
     }
 }
 
 moviesGrid.addEventListener('click', get_movie_by_id)
-
-
-/*        cards += `<div class="cell" id = ${element.imdbID}>
-                <div class="card" >
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                        <img
-                            src="${element.Poster}"
-                            alt="Placeholder image"
-                        />
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-content">
-                                <p class="title is-4">${element.Title}</p>
-                                <p class="subtitle is-6">${element.Year}</p>
-                                <button onclick="get_movie_by_id(${element.id})">ver más</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>`*/

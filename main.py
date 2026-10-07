@@ -14,6 +14,12 @@ app.add_middleware(
     allow_headers=["*"],      # Permite todas las cabeceras HTTP
 )
 
+class ModelComments(BaseModel):
+    id_pelicula: str
+    name: str
+    comment: str
+    date: str
+
 #Getters API
 
 
@@ -37,3 +43,13 @@ def get_comments(imdb_id:str):
 
 
 #Setters BD
+
+@app.post('/comments', tags=['Comments'])
+def movimiento_registro(body: ModelComments):
+    try:
+        insert_data([body.id_pelicula, body.name, body.comment, body.date])
+        return {'registro': 'correcto'}
+
+    except Exception as ex:
+        print(ex)
+        return {'error': 'ha fallado el registro'}
