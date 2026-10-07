@@ -2,9 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-import requests as consulta
-
-
+from consultas_api import *
+from consultas_bd import *
 app = FastAPI()
 
 app.add_middleware(
@@ -17,26 +16,12 @@ app.add_middleware(
 
 #Getters API
 
-def get_movies(title, apiKey):
-    movies = consulta.get(f"http://www.omdbapi.com/?s={title}&type=movie&apikey={apiKey}")
-    movies_list = movies.json()
-    return movies_list
 
-def get_movies_by_year(title, year, apiKey):
-    movies = consulta.get(f"http://www.omdbapi.com/?s={title}&type=movie&y={year}&apikey={apiKey}")
-    movies_list = movies.json()
-    return movies_list
-
-def get_movie_by_id(imdb_id, apiKey):
-    movie = consulta.get(f"http://www.omdbapi.com/?i={imdb_id}&apikey={apiKey}")
-    selected_movie = movie.json()
-    return selected_movie
-
-@app.get("/movies/{title}/{apikey}", tags=['Movies'])
+@app.get("/movies/{title}/{apiKey}", tags=['Movies'])
 def index(title:str, apiKey:str):
     return get_movies(title, apiKey)
     
-@app.get("/movies/{title}/{year}/{apikey}", tags=['Movies'])
+@app.get("/movies/{title}/{year}/", tags=['Movies'])
 def select_movies_year(title:str, year:str, apiKey:str):
     return get_movies_by_year(title, year, apiKey)
 
@@ -45,5 +30,10 @@ def select_movie_by_id(imdb_id: str, apiKey:str):
     return get_movie_by_id(imdb_id, apiKey)
 
 #Getters BD
+
+@app.get("/comments/{imdb_id}", tags=['Comments'])
+def get_comments(imdb_id:str):
+    return select_by_id(imdb_id)
+
 
 #Setters BD

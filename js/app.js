@@ -8,6 +8,7 @@ const yearInput = document.getElementById('year-input')
 function show_search_results(data){
     let cards = '';
     data['Search'].forEach(element => {
+        //cards += `<button id=${element.imdbID}>${element.Title}</button>`
         cards += `<div class="cell" id = ${element.imdbID}>
                 <div class="card" >
                     <div class="card-image">
@@ -23,13 +24,15 @@ function show_search_results(data){
                             <div class="media-content">
                                 <p class="title is-4">${element.Title}</p>
                                 <p class="subtitle is-6">${element.Year}</p>
+                                <button onclick="get_movie_by_id(${element.id})">ver más</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>`
+
     });
-    //Insertar la categoría cargada dentro del selection
+    //Insertar la categoría cargada dentro del selec
     moviesGrid.innerHTML = cards;  
 }
 
@@ -48,11 +51,37 @@ function get_movies_by_search(){
 function set_url(){
     let searchUrl = ''
     if(yearInput.value.length == 0){
-        searchUrl = `http://127.0.0.1:8000/movies/${titleInput.value}/{apikey}?apiKey=${apiKeyValue}`
+        searchUrl = `http://localhost:8000/movies/${titleInput.value}/${apiKeyValue}`
+
     }else{
-        searchUrl = `http://127.0.0.1:8000/movies/${titleInput.value}/${yearInput.value}/{apikey}?apiKey=${apiKeyValue}`
+        searchUrl = `http://localhost:8000/movies/${titleInput.value}/${yearInput.value}/?apiKey=43dd9755`
     }
     return searchUrl
+}
+
+function show_form(){
+    let formElement = document.getElementById('opinion-form')
+    let form =  `<div class="field">
+                    <label class="label">Nombre</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Nombre">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Mensaje</label>
+                    <div class="control">
+                        <textarea class="textarea" placeholder="Escribe tu opinión"></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary">Enviar</button>
+                    </div>
+                </div>`
+
+    formElement.innerHTML = form
 }
 
 function show_movie(data){
@@ -92,7 +121,8 @@ function searchById(id){
     fetch(url)
     .then(response => response.json())
     .then(data =>
-        show_movie(data)
+        show_movie(data),
+        show_form()
     ).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
@@ -112,3 +142,24 @@ function get_movie_by_id(){
 moviesGrid.addEventListener('click', get_movie_by_id)
 
 
+/*        cards += `<div class="cell" id = ${element.imdbID}>
+                <div class="card" >
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                        <img
+                            src="${element.Poster}"
+                            alt="Placeholder image"
+                        />
+                        </figure>
+                    </div>
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-content">
+                                <p class="title is-4">${element.Title}</p>
+                                <p class="subtitle is-6">${element.Year}</p>
+                                <button onclick="get_movie_by_id(${element.id})">ver más</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`*/
