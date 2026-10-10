@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMDB API</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
 
 </head>
 <body>
@@ -19,7 +20,7 @@
                 
                 <label class="label">Título</label>
                     <p class="control has-icons-left">                   
-                        <input id="title-input" class="input" type="text" placeholder="e.g Spiderman" required>
+                        <input id="title-input" class="input" type="text" placeholder="e.g. Spiderman" required>
                         <span class="icon is-small is-left">
                             <i class="fa-solid fa-clapperboard"></i>
                         </span>                          
@@ -54,6 +55,7 @@
             </div>
 
             <form action="POST" id="opinion-form"></form>
+            <div id="div-comment"></div>
         </div>
     </section>
     <footer class="footer">

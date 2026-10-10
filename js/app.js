@@ -12,7 +12,7 @@ function show_search_results(data){
         cards += `<div class="cell" id=${element.imdbID}>
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
+                        <figure class="image is-4by5">
                             <img
                                 src="${element.Poster}"
                                 alt="Placeholder image"
@@ -22,9 +22,10 @@ function show_search_results(data){
                     <div class="card-content">
                         <div class="media">
                             <div class="media-content">
-                                <p class="title is-4">${element.Title}</p>
+                                <p class="title is-6">${element.Title}</p>
                                 <p class="subtitle is-6">${element.Year}</p>
-                                <button class="button is-primary card-button" >ver más</button>
+                                <button class="button is-primary card-button">Ver más</button>
+
                             </div>
                         </div>
                     </div>
@@ -129,8 +130,34 @@ function get_movie_by_id(){
         allMoviesCards[i].onclick = function(){
             let id = allMoviesCards[i].id;
             searchById(id)
+            getComments(id)
         }
     }
 }
 
 moviesGrid.addEventListener('click', get_movie_by_id)
+
+function getComments(imdb_id){
+    //Seleccionamos el cuerpo de la tabla
+    const divComment = document.getElementById('div-comment')
+    //Petición http GET usando FetchAPI
+    fetch(`http://localhost:8000/comments/${imdb_id}`)
+    .then(response => response.json())
+    .then(data =>{
+        let filas = ''; //Variable para acumular filas de las tablas en html
+        data.forEach(element => {
+            filas += `             
+                <div>
+                    <p>${element.persona}</p>
+                    <p>${element.comentario}</p>
+                    <p>${element.fecha}</p>
+                </div>`
+            
+        });
+
+        //Insertar la fila cargada dentro de la tabla
+        divComment.innerHTML = filas;
+    }).catch(error=> console.log("Error al cargar los datos: ", error))
+
+
+}

@@ -45,7 +45,7 @@ def get_comments(imdb_id:str):
 #Setters BD
 
 @app.post('/comments', tags=['Comments'])
-def movimiento_registro(body: ModelComments):
+def post_comment(body: ModelComments):
     try:
         insert_data([body.id_pelicula, body.name, body.comment, body.date])
         return {'registro': 'correcto'}

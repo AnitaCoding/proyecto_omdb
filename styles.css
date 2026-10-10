@@ -1,0 +1,33 @@
+header > .content{
+    padding: 2rem;
+}
+.content > h1{
+    font-size: 4rem;
+    text-align: center;
+    margin: 0;
+}
+
+div .control{
+    display: flex;
+}
+
+div .control > button {
+    flex: 1;
+}
+
+/*página de resultados*/
+
+/*introducir esto con media queries
+
+#movies-grid{
+grid-template-columns: repeat(3, 1fr)
+
+}*/
+
+.card{
+    height: 100%;
+}
+div .media-content{
+    display: flex;
+    flex-direction: column;
+}
