@@ -8,29 +8,21 @@ const yearInput = document.getElementById('year-input')
 function show_search_results(data){
     let cards = '';
     data['Search'].forEach(element => {
-        //cards += `<button id=${element.imdbID}>${element.Title}</button>`
-        cards += `<div class="cell" id=${element.imdbID}>
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by5">
-                            <img
-                                src="${element.Poster}"
-                                alt="Placeholder image"
-                            />
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div class="media">
-                            <div class="media-content">
-                                <p class="title is-6">${element.Title}</p>
+        cards += `<div class="box" id =${element.imdbID}>
+                    <article class="media">
+                        <div class="media-left">
+                            <figure class="image poster">
+                                <img src=${element.Poster} alt="Cartel de ${element.Title}" />
+                            </figure>
+                        </div>
+                        <div class="media-content">
+                            <div class="content">
+                                <p class="title is-4">${element.Title}</p>
                                 <p class="subtitle is-6">${element.Year}</p>
-                                <button class="button is-primary card-button">Ver más</button>
-
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>`
+                    </article>
+                </div>`
 
     });
     //Insertar la categoría cargada dentro del selec
@@ -45,6 +37,7 @@ function get_movies_by_search(){
     .then(response => response.json())
     .then(data =>
         show_search_results(data)
+
     ).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
@@ -122,7 +115,7 @@ function searchById(id){
 }
 
 function get_movie_by_id(){
-    const allMoviesCards = moviesGrid.querySelectorAll('div.cell')
+    const allMoviesCards = moviesGrid.querySelectorAll('div.box')
     for (let i = 0; i < allMoviesCards.length; i++){
         //acceso a recorrido del contenido de tabla por posición con función onclick
         //rows es una propiedad de la etiqueta table, que a su vez, tiene la propiedad onclick

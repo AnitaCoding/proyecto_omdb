@@ -24,10 +24,6 @@ grid-template-columns: repeat(3, 1fr)
 
 }*/
 
-.card{
-    height: 100%;
-}
-div .media-content{
-    display: flex;
-    flex-direction: column;
+.poster{
+    width: 64px;
 }
