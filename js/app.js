@@ -2,7 +2,7 @@ const apiKeyValue = '43dd9755'
 
 const titleInput = document.getElementById('title-input')
 const searchBtn = document.getElementById('search-button')
-const moviesGrid = document.getElementById('movies-grid')
+const moviesList = document.getElementById('movies-list')
 const yearInput = document.getElementById('year-input')
 
 function show_search_results(data){
@@ -23,10 +23,9 @@ function show_search_results(data){
                         </div>
                     </article>
                 </div>`
-
     });
     //Insertar la categoría cargada dentro del selec
-    moviesGrid.innerHTML = cards;  
+    moviesList.innerHTML = cards;  
 }
 
 searchBtn.addEventListener('click', get_movies_by_search)
@@ -55,21 +54,33 @@ function set_url(){
 
 function show_form(){
     let formElement = document.getElementById('opinion-form')
-    let form =  `<div class="field">
+    let form = `<div class="field">
                     <label class="label">Nombre</label>
                     <div class="control">
-                        <input class="input" type="text" placeholder="Nombre">
+                        <input id="nombre" class="input" type="text" placeholder="Nombre">
                     </div>
                 </div>
 
                 <div class="field">
                     <label class="label">Mensaje</label>
                     <div class="control">
-                        <textarea class="textarea" placeholder="Escribe tu opinión"></textarea>
+                        <textarea id="message" class="textarea" placeholder="Escribe tu opinión"></textarea>
                     </div>
+                </div>
+                <div class="control">
+                    <button id="send-button" class="button is-primary" type="button">
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                        <span>
+                            Enviar
+                        </span>
+                    </button>
                 </div>`
-
     formElement.innerHTML = form
+
+    const sendButton = document.getElementById('send-button')
+    sendButton.addEventListener('click', createComment)
 }
 
 function show_movie(data){
@@ -77,10 +88,10 @@ function show_movie(data){
     card = `<div class="cell" id = ${data.imdbID}>
             <div class="card" >
                 <div class="card-image">
-                    <figure class="image is-4by3">
+                    <figure>
                         <img
                             src="${data.Poster}"
-                            alt="Placeholder image"
+                            alt="${data.Title}"
                         />
                     </figure>
                 </div>
@@ -91,15 +102,17 @@ function show_movie(data){
                             <p class="subtitle is-6">${data.Released}</p>
                         </div>
                     </div>
+                    <div class="content">
+                        ${data.Plot}
+                    </div>
                 </div>
 
-                <div class="content">
-                ${data.Plot}
-                </div>
+                
             </div>
         </div>`
     //Insertar la categoría cargada dentro del grid
-    moviesGrid.innerHTML = card;  
+    moviesList.innerHTML = card;
+    console.log(document.querySelector('div.cell').id)
     
 }
 
@@ -108,14 +121,14 @@ function searchById(id){
     console.log(url)
     fetch(url)
     .then(response => response.json())
-    .then(data =>
-        show_movie(data),
+    .then(data =>{
+        show_movie(data)
         show_form()
-    ).catch(error=> console.log("Error al cargar los datos: ", error))
+    }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
 function get_movie_by_id(){
-    const allMoviesCards = moviesGrid.querySelectorAll('div.box')
+    const allMoviesCards = moviesList.querySelectorAll('div.box')
     for (let i = 0; i < allMoviesCards.length; i++){
         //acceso a recorrido del contenido de tabla por posición con función onclick
         //rows es una propiedad de la etiqueta table, que a su vez, tiene la propiedad onclick
@@ -128,7 +141,7 @@ function get_movie_by_id(){
     }
 }
 
-moviesGrid.addEventListener('click', get_movie_by_id)
+moviesList.addEventListener('click', get_movie_by_id)
 
 function getComments(imdb_id){
     //Seleccionamos el cuerpo de la tabla
@@ -137,20 +150,70 @@ function getComments(imdb_id){
     fetch(`http://localhost:8000/comments/${imdb_id}`)
     .then(response => response.json())
     .then(data =>{
-        let filas = ''; //Variable para acumular filas de las tablas en html
-        data.forEach(element => {
-            filas += `             
-                <div>
-                    <p>${element.persona}</p>
-                    <p>${element.comentario}</p>
-                    <p>${element.fecha}</p>
-                </div>`
+        let comments = '<h3 class="title is-3">Comentarios</h3>';
+
+        if(data.length != 0){
+            data.forEach(element => {
+                comments += `             
+                    <div>
+                        <p>${element.persona}</p>
+                        <p>${element.comentario}</p>
+                        <p>${element.fecha}</p>
+                    </div>`
             
         });
 
         //Insertar la fila cargada dentro de la tabla
-        divComment.innerHTML = filas;
+        divComment.innerHTML = comments;
+
+        }else{
+            comments += `<div class="notification is-warning is-light">
+                                        <p>Todavía no hay comentarios para esta película, se el primero en comentar.</p>
+                                    </div>`
+            divComment.innerHTML = comments
+        }
+
+         
     }).catch(error=> console.log("Error al cargar los datos: ", error))
 
+}
 
+function createComment(){
+    //Capturar datos
+    let imdb_id = document.querySelector('div.cell').id
+    let name = document.getElementById('nombre').value
+    let message = document.getElementById('message').value
+    let date = new Date().toISOString().split('T')[0];
+
+    fetch(`http://localhost:8000/comments`,
+        {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    //La key tiene que ser el nombre que le damos en fastapi
+                    //El value el que le damos en js
+                    id_pelicula: imdb_id,
+                    name: name,
+                    comment: message,
+                    date: date
+                }
+            )
+        })
+    .then(response => {
+        if(!response.ok){
+            throw new Error(`Error HTTP: ${response.status}`)
+        }
+
+        alert('Su comentario ha quedado registrado.')
+
+    })
+    .catch(
+        error=>{
+            alert('No se ha podido registrar el movimiento')
+            console.log('Detalle error: ', error)
+        }
+    );
 }

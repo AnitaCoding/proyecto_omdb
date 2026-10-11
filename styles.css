@@ -15,15 +15,14 @@ div .control > button {
     flex: 1;
 }
 
-/*página de resultados*/
-
-/*introducir esto con media queries
-
-#movies-grid{
-grid-template-columns: repeat(3, 1fr)
-
-}*/
-
 .poster{
     width: 64px;
+}
+
+div > .card{
+    display: flex;
+}
+
+.card-image{
+    width: 50%;
 }
