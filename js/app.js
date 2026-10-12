@@ -7,24 +7,27 @@ const yearInput = document.getElementById('year-input')
 
 function show_search_results(data){
     let cards = '';
-    data['Search'].forEach(element => {
-        cards += `<div class="box" id =${element.imdbID}>
-                    <article class="media">
-                        <div class="media-left">
-                            <figure class="image poster">
-                                <img src=${element.Poster} alt="Cartel de ${element.Title}" />
-                            </figure>
-                        </div>
-                        <div class="media-content">
-                            <div class="content">
-                                <p class="title is-4">${element.Title}</p>
-                                <p class="subtitle is-6">${element.Year}</p>
+
+        data['Search'].forEach(element => {
+            
+            cards += `<div class="box" id =${element.imdbID}>
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image poster">
+                                    <img src=${element.Poster} alt="Cartel de ${element.Title}" />
+                                </figure>
                             </div>
-                        </div>
-                    </article>
-                </div>`
-    });
-    //Insertar la categoría cargada dentro del selec
+                            <div class="media-content">
+                                <div class="content">
+                                    <p class="title is-4">${element.Title}</p>
+                                    <p class="subtitle is-6">${element.Year}</p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>`
+        });
+
+        //Insertar la categoría cargada dentro del selec
     moviesList.innerHTML = cards;  
 }
 
@@ -34,10 +37,16 @@ function get_movies_by_search(){
     const url = set_url()
     fetch(url)
     .then(response => response.json())
-    .then(data =>
-        show_search_results(data)
+    .then(data => {
+        if(data['Response'] == 'False'){
+            moviesList.innerHTML = `<div class="notification is-danger is-light">
+                                        <p>Sin resultados. Prueba a buscar otro título.</p>
+                                    </div>`
+        }else{
+            show_search_results(data)
 
-    ).catch(error=> console.log("Error al cargar los datos: ", error))
+        }  
+    }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
 //Una función que controle si hay año o no. Si hay año, que lo añada a la búsqueda. 
@@ -54,7 +63,8 @@ function set_url(){
 
 function show_form(){
     let formElement = document.getElementById('opinion-form')
-    let form = `<div class="field">
+    let form = `<h3 class="title is-3">Comparte tu reseña</h3>
+                <div class="field">
                     <label class="label">Nombre</label>
                     <div class="control">
                         <input id="nombre" class="input" type="text" placeholder="Nombre">
@@ -99,15 +109,18 @@ function show_movie(data){
                     <div class="media">
                         <div class="media-content">
                             <p class="title is-4">${data.Title}</p>
-                            <p class="subtitle is-6">${data.Released}</p>
+                            <p class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
                         </div>
                     </div>
                     <div class="content">
-                        ${data.Plot}
+                        <p class="p-card-content">Fecha de estreno: ${data.Released}</p>
+                        <p class="p-card-content">${data.Plot}</p>
+                        <p class="p-card-content">Dirección: ${data.Director}</p>
+                        <p class="p-card-content">Guión: ${data.Writer}</p>
+                        <p class="p-card-content">Reparto: ${data.Actors}</p>
+                        <p class="p-card-content">Premios: ${data.Awards}</p>
                     </div>
-                </div>
-
-                
+                </div>  
             </div>
         </div>`
     //Insertar la categoría cargada dentro del grid
@@ -150,28 +163,41 @@ function getComments(imdb_id){
     fetch(`http://localhost:8000/comments/${imdb_id}`)
     .then(response => response.json())
     .then(data =>{
-        let comments = '<h3 class="title is-3">Comentarios</h3>';
+        let comments = '<h3 id="title-comments-list" class="title is-3">Reseñas</h3>';
 
         if(data.length != 0){
             data.forEach(element => {
                 comments += `             
-                    <div>
-                        <p>${element.persona}</p>
+                    <div class='comment-container'>
+                        <div class = 'comment-header'>
+                            <div class='div-comment-header'>
+                                <span class="icon is-small is-left">
+                                    <i class="fa-solid fa-user"></i>
+                                </span>
+                                <span>
+                                    <p class='comment-username'>${element.persona}</p>
+                                </span>
+                            </div>
+                            <div class='div-comment-header'>
+                                <span class="icon is-small is-left">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </span>
+                                <span>
+                                    <p>${element.fecha.split('-').reverse().join('-')}</p>
+                                </span>
+                            </div>
+                        </div>
                         <p>${element.comentario}</p>
-                        <p>${element.fecha}</p>
                     </div>`
             
-        });
-
-        //Insertar la fila cargada dentro de la tabla
-        divComment.innerHTML = comments;
+            });
 
         }else{
             comments += `<div class="notification is-warning is-light">
                                         <p>Todavía no hay comentarios para esta película, se el primero en comentar.</p>
                                     </div>`
-            divComment.innerHTML = comments
         }
+        divComment.innerHTML = comments
 
          
     }).catch(error=> console.log("Error al cargar los datos: ", error))

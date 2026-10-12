@@ -7,6 +7,10 @@ header > .content{
     margin: 0;
 }
 
+.container{
+    padding-top: 2rem;
+}
+
 div .control{
     display: flex;
 }
@@ -23,6 +27,42 @@ div > .card{
     display: flex;
 }
 
+#movies-list{
+    padding: 2rem 0;
+}
+
 .card-image{
     width: 50%;
+}
+
+#title-comments-list{
+    margin: 0;
+}
+
+.comment-container{
+    border-bottom: 1px solid;
+    padding: 1rem 0;
+}
+
+.comment-header{
+    display: flex;
+    padding-bottom: 0.5rem;
+}
+
+.div-comment-header{
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.div-comment-header > span:first-child{
+    margin-right: 0.5rem;
+}
+
+.comment-username{
+    font-weight: bold;
+}
+
+#opinion-form{
+    padding: 2rem 0;
 }
