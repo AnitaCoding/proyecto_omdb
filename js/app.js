@@ -1,5 +1,8 @@
 const apiKeyValue = '43dd9755'
 
+const moviesUrl = 'http://localhost:8000/movies'
+const commentsUrl = 'http://localhost:8000/comments'
+
 const titleInput = document.getElementById('title-input')
 const searchBtn = document.getElementById('search-button')
 const moviesList = document.getElementById('movies-list')
@@ -53,10 +56,10 @@ function get_movies_by_search(){
 function set_url(){
     let searchUrl = ''
     if(yearInput.value.length == 0){
-        searchUrl = `http://localhost:8000/movies/${titleInput.value}/${apiKeyValue}`
+        searchUrl = `${moviesUrl}/${titleInput.value}/${apiKeyValue}`
 
     }else{
-        searchUrl = `http://localhost:8000/movies/${titleInput.value}/${yearInput.value}/?apiKey=43dd9755`
+        searchUrl = `${moviesUrl}/${titleInput.value}/${yearInput.value}/?apiKey=43dd9755`
     }
     return searchUrl
 }
@@ -130,8 +133,7 @@ function show_movie(data){
 }
 
 function searchById(id){
-    const url = `http://localhost:8000/movies/${id}?apiKey=${apiKeyValue}`;
-    console.log(url)
+    const url = `${moviesUrl}/${id}?apiKey=${apiKeyValue}`;
     fetch(url)
     .then(response => response.json())
     .then(data =>{
@@ -160,7 +162,7 @@ function getComments(imdb_id){
     //Seleccionamos el cuerpo de la tabla
     const divComment = document.getElementById('div-comment')
     //Petición http GET usando FetchAPI
-    fetch(`http://localhost:8000/comments/${imdb_id}`)
+    fetch(`${commentsUrl}/${imdb_id}`)
     .then(response => response.json())
     .then(data =>{
         let comments = '<h3 id="title-comments-list" class="title is-3">Reseñas</h3>';
@@ -211,7 +213,7 @@ function createComment(){
     let message = document.getElementById('message').value
     let date = new Date().toISOString().split('T')[0];
 
-    fetch(`http://localhost:8000/comments`,
+    fetch(`${commentsUrl}`,
         {
             method: 'POST',
             headers:{
