@@ -42,7 +42,7 @@ def get_comments(imdb_id:str):
     return select_by_id(imdb_id)
 
 
-#Setters BD
+#Setters BD comments
 
 @app.post('/comments', tags=['Comments'])
 def post_comment(body: ModelComments):
@@ -53,3 +53,9 @@ def post_comment(body: ModelComments):
     except Exception as ex:
         print(ex)
         return {'error': 'ha fallado el registro'}
+
+#Get BD calificacion
+
+@app.get('/califications', tags = ['Califications'])
+def get_average_by_id(id: str):
+    return get_average_calification(id)
