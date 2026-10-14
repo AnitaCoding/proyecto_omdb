@@ -96,8 +96,30 @@ function show_form(){
     sendButton.addEventListener('click', createComment)
 }
 
+function getGenres(data){
+    let genres = data.split(',')
+    let result = []
+    for (i = 0; i < genres.length; i++){
+        result.push(genres[i].trim())
+    }
+     return result
+}
+
+function showGenres(genres){
+    let genresArray = getGenres(genres)
+    let genres_tags = '<div class="tags">'
+    for(i = 0; i < genresArray.length ; i++){
+        genres_tags += `<span class="tag is-dark">${genresArray[i]}</span>`
+    }
+    genres_tags += '</div>'
+
+    return genres_tags
+}
+
 function show_movie(data){
     let card = '';
+    let genre_tags = showGenres(data['Genre'])
+
     card = `<div class="cell" id = ${data.imdbID}>
             <div class="card" >
                 <div class="card-image">
@@ -113,6 +135,7 @@ function show_movie(data){
                         <div class="media-content">
                             <p class="title is-4">${data.Title}</p>
                             <p class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
+                            ${genre_tags}
                         </div>
                     </div>
                     <div class="content">
