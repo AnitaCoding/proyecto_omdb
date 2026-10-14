@@ -73,7 +73,7 @@ def post_comment(body: ModelComments):
 
 #Get BD calificacion
 
-@app.get('/califications', tags = ['Califications'])
+@app.get('/califications/{id}', tags = ['Califications'])
 def get_average_by_id(id: str):
     return get_average_calification(id)
 

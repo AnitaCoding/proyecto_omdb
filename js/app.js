@@ -2,6 +2,7 @@ const apiKeyValue = '43dd9755'
 
 const moviesUrl = 'http://localhost:8000/movies'
 const commentsUrl = 'http://localhost:8000/comments'
+const ratingsUrl = 'http://localhost:8000/califications'
 
 const titleInput = document.getElementById('title-input')
 const searchBtn = document.getElementById('search-button')
@@ -151,8 +152,7 @@ function show_movie(data){
         </div>`
     //Insertar la categoría cargada dentro del grid
     moviesList.innerHTML = card;
-    console.log(document.querySelector('div.cell').id)
-    
+    getRatings(data.imdbID)
 }
 
 function searchById(id){
@@ -213,10 +213,8 @@ function getComments(imdb_id){
                             </div>
                         </div>
                         <p>${element.comentario}</p>
-                    </div>`
-            
+                    </div>`            
             });
-
         }else{
             comments += `<div class="notification is-warning is-light">
                                         <p>Todavía no hay comentarios para esta película, se el primero en comentar.</p>
@@ -267,4 +265,18 @@ function createComment(){
             console.log('Detalle error: ', error)
         }
     );
+}
+
+function getRatings(imdb_id){
+    //Seleccionamos el cuerpo de la tabla
+    const divRating = document.getElementById('div-rating')
+    //Petición http GET usando FetchAPI
+    fetch(`${ratingsUrl}/${imdb_id}`)
+    .then(response => response.json())
+    .then(data =>{
+        console.log(data)
+        if(data.detail == 'Not Found'){
+            console.log('todavía no hay ratings')
+        }
+    })
 }
