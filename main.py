@@ -14,12 +14,29 @@ app.add_middleware(
     allow_headers=["*"],      # Permite todas las cabeceras HTTP
 )
 
+class ModelDB(BaseModel):
+    id_pelicula: str
+    name: str
+    date: str
+
+class ModelComments(ModelDB):
+    comment: str
+
+class ModelCalifications(ModelDB):
+    calification: int
+'''
 class ModelComments(BaseModel):
     id_pelicula: str
     name: str
     comment: str
     date: str
 
+class ModelCalifications(BaseModel):
+    id_pelicula: str
+    name: str
+    calification: int
+    date: str
+'''
 #Getters API
 
 
@@ -47,15 +64,27 @@ def get_comments(imdb_id:str):
 @app.post('/comments', tags=['Comments'])
 def post_comment(body: ModelComments):
     try:
-        insert_data([body.id_pelicula, body.name, body.comment, body.date])
+        insert_data([body.id_pelicula, body.name, body.comment, body.date],'comentarios_db.db', 'comentarios', 'comentario')
         return {'registro': 'correcto'}
 
     except Exception as ex:
         print(ex)
-        return {'error': 'ha fallado el registro'}
+        return {'error': 'ha fallado el registro del comentario'}
 
 #Get BD calificacion
 
 @app.get('/califications', tags = ['Califications'])
 def get_average_by_id(id: str):
     return get_average_calification(id)
+
+#Set BD Calificacion
+
+@app.post('/califications', tags=['Califications'])
+def post_calification(body: ModelCalifications):
+    try:
+        insert_data([body.id_pelicula, body.name, body.calification, body.date],'calificacion_db.db', 'calificacion', 'calificacion')
+        return {'registro': 'correcto'}
+
+    except Exception as ex:
+        print(ex)
+        return {'error': 'ha fallado el registro de la calificación'}

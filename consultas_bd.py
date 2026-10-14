@@ -21,9 +21,9 @@ def select_by_id(id: str):
     return result
 
 
-def insert_data(data: list):
+def insert_data(data: list,db_name: str, table: str, info:str):
     try:
-        conexion_insert = Conexion(DB_COMENTARIOS, 'INSERT INTO comentarios(id_pelicula, persona, comentario, fecha) VALUES (?,?,?,?);', data)          
+        conexion_insert = Conexion(db_name, f'INSERT INTO {table}(id_pelicula, persona, {info}, fecha) VALUES (?,?,?,?);', data)          
         conexion_insert.res
         conexion_insert.con.commit()#para confirmar guardado
     except sqlite3.Error as error:
