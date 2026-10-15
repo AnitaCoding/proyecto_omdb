@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mostrar Película</title>   
+    <title>OMDB API</title>   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -15,21 +15,21 @@
     </header>
     <section>
         <div class="container">
-            <div class="card" id="id-prueba">
+            <div class="card">
                 <div class="card-image">
                     <figure>
-                        <img
-                            src="${data.Poster}"
-                            alt="${data.Title}"
+                        <img id="movie-poster"
+                            src=""
+                            alt=""
                         />
                     </figure>
                 </div>
                 <div class="card-content">
                     <div class="media">
                         <div class="media-content">
-                            <p id="movie-title" class="title is-4">${data.Title}</p>
-                            <p id="movie-info" class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
-                            ${genresTags}
+                            <p id="movie-title" class="title is-4"></p>
+                            <p id="movie-info" class="subtitle is-6"></p>
+                            <div id="genres-tags" class="tags"></div>
                             <div class="icon-text">
                                 <span class="icon has-text-warning">
                                     <i class="fa-solid fa-star"></i>
@@ -39,12 +39,12 @@
                         </div>
                     </div>
                     <div class="content">
-                        <p id="movie-released" class="p-card-content">Fecha de estreno: ${data.Released}</p>
-                        <p id="movie-plot" class="p-card-content">${data.Plot}</p>
-                        <p id="movie-direction" class="p-card-content">Dirección: ${data.Director}</p>
-                        <p id="movie-writer" class="p-card-content">Guión: ${data.Writer}</p>
-                        <p id="movie-actors" class="p-card-content">Reparto: ${data.Actors}</p>
-                        <p id="movie-awards" class="p-card-content">Premios: ${data.Awards}</p>
+                        <p id="movie-released" class="p-card-content"></p>
+                        <p id="movie-plot" class="p-card-content"></p>
+                        <p id="movie-direction" class="p-card-content"></p>
+                        <p id="movie-writer" class="p-card-content"></p>
+                        <p id="movie-actors" class="p-card-content"></p>
+                        <p id="movie-awards" class="p-card-content"></p>
                     </div>
                 </div>  
             </div>

@@ -23,67 +23,57 @@ function getGenres(data){
 
 function showGenres(genres){
     let genresArray = getGenres(genres)
-    let genresTags = '<div class="tags">'
+    const GENRES_TAGS = document.getElementById('genres-tags')
+    let genresSpan = ''
     for(i = 0; i < genresArray.length ; i++){
-        genresTags += `<span class="tag is-dark">${genresArray[i]}</span>`
+        genresSpan += `<span class="tag is-dark">${genresArray[i]}</span>`
     }
-    genresTags += '</div>'
 
-    return genresTags
+    GENRES_TAGS.innerHTML = genresSpan
 }
 
 function getRatings(imdb_id){
     //Seleccionamos el cuerpo de la tabla
-    let result = ''
+    const SPAN_RATING = document.getElementById('span-rating')
     //Petición http GET usando FetchAPI
     fetch(`${RATINGS_URL}/${imdb_id}`)
     .then(response => response.json())
-    .then(data => data[0].media)
+    .then(data => {
+        if(data[0].media == null){
+            console.log('Esta película todavía no tiene calificaciones')
+        }else{
+            SPAN_RATING.textContent = `${data[0].media}/5`
+        }
+    })
     .catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
 function showMovie(data){
-    let card = '';
-    let genresTags = showGenres(data['Genre'])
-    let rating = ''
-    card = `<div class="cell" id = ${data.imdbID}>
-            <div class="card" >
-                <div class="card-image">
-                    <figure>
-                        <img
-                            src="${data.Poster}"
-                            alt="${data.Title}"
-                        />
-                    </figure>
-                </div>
-                <div class="card-content">
-                    <div class="media">
-                        <div class="media-content">
-                            <p class="title is-4">${data.Title}</p>
-                            <p class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
-                            ${genresTags}
-                            <div class="icon-text">
-                                <span class="icon has-text-warning">
-                                    <i class="fa-solid fa-star"></i>
-                                </span>
-                                <span id='span-rating'></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="content">
-                        <p class="p-card-content">Fecha de estreno: ${data.Released}</p>
-                        <p class="p-card-content">${data.Plot}</p>
-                        <p class="p-card-content">Dirección: ${data.Director}</p>
-                        <p class="p-card-content">Guión: ${data.Writer}</p>
-                        <p class="p-card-content">Reparto: ${data.Actors}</p>
-                        <p class="p-card-content">Premios: ${data.Awards}</p>
-                    </div>
-                </div>  
-            </div>
-        </div>`
-    //Insertar la card
-    PRUEBA.innerHTML = card;
-    console.log(getRatings(data.imdbID))
+
+    const MOVIE_POSTER = document.getElementById('movie-poster')
+    const MOVIE_TITLE = document.getElementById('movie-title')
+    const MOVIE_INFO = document.getElementById('movie-info')
+    const MOVIE_RELEASED = document.getElementById('movie-released')
+    const MOVIE_PLOT = document.getElementById('movie-plot')
+    const MOVIE_DIRECTION = document.getElementById('movie-direction')
+    const MOVIE_WRITER = document.getElementById('movie-writer')
+    const MOVIE_ACTORS = document.getElementById('movie-actors')
+    const MOVIE_AWARDS = document.getElementById('movie-awards')
+    
+    MOVIE_POSTER.setAttribute('src', data.Poster)
+    MOVIE_POSTER.setAttribute('alt', data.Title)
+    MOVIE_TITLE.textContent = data.Title
+    MOVIE_INFO.innerHTML = `${data.Year} · ${data.Runtime} · ${data.Rated}`
+    //genrestags
+    MOVIE_RELEASED.textContent = `Fecha de estreno: ${data.Released}`
+    MOVIE_PLOT.textContent = data.Plot
+    MOVIE_DIRECTION.textContent = `Dirección: ${data.Director}`
+    MOVIE_WRITER.textContent = `Guión: ${data.Writer}`
+    MOVIE_ACTORS.textContent = `Reparto: ${data.Actors}`
+    MOVIE_AWARDS.textContent = `Premios: ${data.Awards}`
+    
+    showGenres(data['Genre'])
+    getRatings(SELECTED_MOVIE_ID)
 }
 
 function searchById(id){
@@ -96,9 +86,7 @@ function searchById(id){
 }
 
 function getComments(imdb_id){
-    //Seleccionamos el cuerpo de la tabla
     const DIV_COMMENT = document.getElementById('div-comment')
-    //Petición http GET usando FetchAPI
     fetch(`${COMMENTS_URL}/${imdb_id}`)
     .then(response => response.json())
     .then(data =>{
