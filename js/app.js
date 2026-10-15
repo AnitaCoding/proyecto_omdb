@@ -1,15 +1,13 @@
-const apiKeyValue = '43dd9755'
+const APIKEY_VALUE = '43dd9755'
 
-const moviesUrl = 'http://localhost:8000/movies'
-const commentsUrl = 'http://localhost:8000/comments'
-const ratingsUrl = 'http://localhost:8000/califications'
+const MOVIES_URL = 'http://localhost:8000/movies'
 
-const titleInput = document.getElementById('title-input')
-const searchBtn = document.getElementById('search-button')
-const moviesList = document.getElementById('movies-list')
-const yearInput = document.getElementById('year-input')
+const TITLE_INPUT = document.getElementById('title-input')
+const SEARCH_BTN = document.getElementById('search-button')
+const MOVIES_LIST = document.getElementById('movies-list')
+const YEAR_INPUT = document.getElementById('year-input')
 
-function show_search_results(data){
+function showSearchResults(data){
     let cards = '';
 
         data['Search'].forEach(element => {
@@ -32,22 +30,22 @@ function show_search_results(data){
         });
 
         //Insertar la categoría cargada dentro del selec
-    moviesList.innerHTML = cards;  
+    MOVIES_LIST.innerHTML = cards;  
 }
 
-searchBtn.addEventListener('click', get_movies_by_search)
+SEARCH_BTN.addEventListener('click', getMoviesBySearch)
 
-function get_movies_by_search(){
-    const url = set_url()
-    fetch(url)
+function getMoviesBySearch(){
+    const URL = set_url()
+    fetch(URL)
     .then(response => response.json())
     .then(data => {
         if(data['Response'] == 'False'){
-            moviesList.innerHTML = `<div class="notification is-danger is-light">
+            MOVIES_LIST.innerHTML = `<div class="notification is-danger is-light">
                                         <p>Sin resultados. Prueba a buscar otro título.</p>
                                     </div>`
         }else{
-            show_search_results(data)
+            showSearchResults(data)
 
         }  
     }).catch(error=> console.log("Error al cargar los datos: ", error))
@@ -56,16 +54,16 @@ function get_movies_by_search(){
 //Una función que controle si hay año o no. Si hay año, que lo añada a la búsqueda. 
 function set_url(){
     let searchUrl = ''
-    if(yearInput.value.length == 0){
-        searchUrl = `${moviesUrl}/${titleInput.value}/${apiKeyValue}`
+    if(YEAR_INPUT.value.length == 0){
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${APIKEY_VALUE}`
 
     }else{
-        searchUrl = `${moviesUrl}/${titleInput.value}/${yearInput.value}/?apiKey=43dd9755`
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}/?apiKey=APIKEY_VALUE`
     }
     return searchUrl
 }
 
-function show_form(){
+/*function showForm(){
     let formElement = document.getElementById('opinion-form')
     let form = `<h3 class="title is-3">Comparte tu reseña</h3>
                 <div class="field">
@@ -93,8 +91,8 @@ function show_form(){
                 </div>`
     formElement.innerHTML = form
 
-    const sendButton = document.getElementById('send-button')
-    sendButton.addEventListener('click', createComment)
+    const SEND_BUTTON = document.getElementById('send-button')
+    SEND_BUTTON.addEventListener('click', createComment)
 }
 
 function getGenres(data){
@@ -108,19 +106,30 @@ function getGenres(data){
 
 function showGenres(genres){
     let genresArray = getGenres(genres)
-    let genres_tags = '<div class="tags">'
+    let genresTags = '<div class="tags">'
     for(i = 0; i < genresArray.length ; i++){
-        genres_tags += `<span class="tag is-dark">${genresArray[i]}</span>`
+        genresTags += `<span class="tag is-dark">${genresArray[i]}</span>`
     }
-    genres_tags += '</div>'
+    genresTags += '</div>'
 
-    return genres_tags
+    return genresTags
 }
 
-function show_movie(data){
-    let card = '';
-    let genre_tags = showGenres(data['Genre'])
+function getRatings(imdb_id){
+    //Seleccionamos el cuerpo de la tabla
+    let result = ''
+    //Petición http GET usando FetchAPI
+    fetch(`${RATINGS_URL}/${imdb_id}`)
+    .then(response => response.json())
+    .then(data => data[0].media)
+    .catch(error=> console.log("Error al cargar los datos: ", error))
 
+}
+
+function showMovie(data){
+    let card = '';
+    let genresTags = showGenres(data['Genre'])
+    let rating = ''
     card = `<div class="cell" id = ${data.imdbID}>
             <div class="card" >
                 <div class="card-image">
@@ -136,7 +145,13 @@ function show_movie(data){
                         <div class="media-content">
                             <p class="title is-4">${data.Title}</p>
                             <p class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
-                            ${genre_tags}
+                            ${genresTags}
+                            <div class="icon-text">
+                                <span class="icon has-text-warning">
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
+                                <span id='span-rating'></span>
+                            </div>
                         </div>
                     </div>
                     <div class="content">
@@ -150,46 +165,56 @@ function show_movie(data){
                 </div>  
             </div>
         </div>`
-    //Insertar la categoría cargada dentro del grid
-    moviesList.innerHTML = card;
-    getRatings(data.imdbID)
+    //Insertar la card
+    MOVIES_LIST.innerHTML = card;
+    console.log(getRatings(data.imdbID))
 }
 
 function searchById(id){
-    const url = `${moviesUrl}/${id}?apiKey=${apiKeyValue}`;
-    fetch(url)
+    const URL = `${MOVIES_URL}/${id}?apiKey=${APIKEY_VALUE}`;
+    fetch(URL)
     .then(response => response.json())
     .then(data =>{
-        show_movie(data)
-        show_form()
+        showMovie(data)
+        showForm()
     }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
+*/
 
-function get_movie_by_id(){
-    const allMoviesCards = moviesList.querySelectorAll('div.box')
-    for (let i = 0; i < allMoviesCards.length; i++){
+//Una función que setee la palabra buscada en sesion storage para que si le da a atrás, 
+function getMovieById(){
+    const ALL_MOVIES_CARDS = MOVIES_LIST.querySelectorAll('div.box')
+    for (let i = 0; i < ALL_MOVIES_CARDS.length; i++){
         //acceso a recorrido del contenido de tabla por posición con función onclick
         //rows es una propiedad de la etiqueta table, que a su vez, tiene la propiedad onclick
         //onclick es un método que se puede asociar a cualquier elemento
-        allMoviesCards[i].onclick = function(){
-            let id = allMoviesCards[i].id;
-            searchById(id)
-            getComments(id)
+        ALL_MOVIES_CARDS[i].onclick = function(){
+            let id = ALL_MOVIES_CARDS[i].id;
+            //searchById(id)
+           // getComments(id)
+           goToMovieCard(id)
         }
     }
 }
 
-moviesList.addEventListener('click', get_movie_by_id)
+MOVIES_LIST.addEventListener('click', getMovieById)
+function goToMovieCard(imdbID){
+    const PARAMS = new URLSearchParams({imdbID});
 
+  // Navegamos a la página 2 con los parámetros en la URL
+     window.location.href = `movie_card.html?${PARAMS.toString()}`;
+
+}
+
+/*
 function getComments(imdb_id){
     //Seleccionamos el cuerpo de la tabla
-    const divComment = document.getElementById('div-comment')
+    const DIV_COMMENT = document.getElementById('div-comment')
     //Petición http GET usando FetchAPI
-    fetch(`${commentsUrl}/${imdb_id}`)
+    fetch(`${COMMENTS_URL}/${imdb_id}`)
     .then(response => response.json())
     .then(data =>{
         let comments = '<h3 id="title-comments-list" class="title is-3">Reseñas</h3>';
-
         if(data.length != 0){
             data.forEach(element => {
                 comments += `             
@@ -220,21 +245,18 @@ function getComments(imdb_id){
                                         <p>Todavía no hay comentarios para esta película, se el primero en comentar.</p>
                                     </div>`
         }
-        divComment.innerHTML = comments
-
-         
+        DIV_COMMENT.innerHTML = comments    
     }).catch(error=> console.log("Error al cargar los datos: ", error))
-
 }
 
 function createComment(){
     //Capturar datos
-    let imdb_id = document.querySelector('div.cell').id
+    let imdbId = document.querySelector('div.cell').id
     let name = document.getElementById('nombre').value
     let message = document.getElementById('message').value
     let date = new Date().toISOString().split('T')[0];
 
-    fetch(`${commentsUrl}`,
+    fetch(`${COMMENTS_URL}`,
         {
             method: 'POST',
             headers:{
@@ -244,7 +266,7 @@ function createComment(){
                 {
                     //La key tiene que ser el nombre que le damos en fastapi
                     //El value el que le damos en js
-                    id_pelicula: imdb_id,
+                    id_pelicula: imdbId,
                     name: name,
                     comment: message,
                     date: date
@@ -255,28 +277,13 @@ function createComment(){
         if(!response.ok){
             throw new Error(`Error HTTP: ${response.status}`)
         }
-
         alert('Su comentario ha quedado registrado.')
-
     })
     .catch(
         error=>{
-            alert('No se ha podido registrar el movimiento')
+            alert('No se ha podido registrar el comentario')
             console.log('Detalle error: ', error)
         }
     );
 }
-
-function getRatings(imdb_id){
-    //Seleccionamos el cuerpo de la tabla
-    const divRating = document.getElementById('div-rating')
-    //Petición http GET usando FetchAPI
-    fetch(`${ratingsUrl}/${imdb_id}`)
-    .then(response => response.json())
-    .then(data =>{
-        console.log(data)
-        if(data.detail == 'Not Found'){
-            console.log('todavía no hay ratings')
-        }
-    })
-}
+*/

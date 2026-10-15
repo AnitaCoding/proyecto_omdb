@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mostrar Película</title>   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="hero is-primary">
+        <div class="content">
+            <h1>OMDB API</h1>
+        </div>
+    </header>
+    <section>
+        <div class="container">
+            <div class="card" id="id-prueba">
+                <div class="card-image">
+                    <figure>
+                        <img
+                            src="${data.Poster}"
+                            alt="${data.Title}"
+                        />
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p id="movie-title" class="title is-4">${data.Title}</p>
+                            <p id="movie-info" class="subtitle is-6">${data.Year} · ${data.Runtime} · ${data.Rated}</p>
+                            ${genresTags}
+                            <div class="icon-text">
+                                <span class="icon has-text-warning">
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
+                                <span id='span-rating'></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <p id="movie-released" class="p-card-content">Fecha de estreno: ${data.Released}</p>
+                        <p id="movie-plot" class="p-card-content">${data.Plot}</p>
+                        <p id="movie-direction" class="p-card-content">Dirección: ${data.Director}</p>
+                        <p id="movie-writer" class="p-card-content">Guión: ${data.Writer}</p>
+                        <p id="movie-actors" class="p-card-content">Reparto: ${data.Actors}</p>
+                        <p id="movie-awards" class="p-card-content">Premios: ${data.Awards}</p>
+                    </div>
+                </div>  
+            </div>
+
+            <form id="opinion-form">
+                <h3 class="title is-3">Comparte tu reseña</h3>
+                <div class="field">
+                    <label class="label">Nombre</label>
+                    <div class="control">
+                        <input id="nombre" class="input" type="text" placeholder="Nombre">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Mensaje</label>
+                    <div class="control">
+                        <textarea id="message" class="textarea" placeholder="Escribe tu opinión"></textarea>
+                    </div>
+                </div>
+                <div class="control">
+                    <button id="send-button" class="button is-primary" type="button">
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </span>
+                        <span>
+                            Enviar
+                        </span>
+                    </button>
+                </div>
+            </form>
+            <div id="div-comment"></div>  
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+            <strong>OMDB API</strong> por Ana Aparicio.
+            </p>
+        </div>
+    </footer>
+    <script src="js/movie_card.js"></script>
+    <script src="https://kit.fontawesome.com/deb332e293.js" crossorigin="anonymous"></script>
+</body>
+</html>
