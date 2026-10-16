@@ -24,21 +24,8 @@ class ModelComments(ModelDB):
 
 class ModelCalifications(ModelDB):
     calification: int
-'''
-class ModelComments(BaseModel):
-    id_pelicula: str
-    name: str
-    comment: str
-    date: str
 
-class ModelCalifications(BaseModel):
-    id_pelicula: str
-    name: str
-    calification: int
-    date: str
-'''
 #Getters API
-
 
 @app.get("/movies/{title}/{apiKey}", tags=['Movies'])
 def index(title:str, apiKey:str):
