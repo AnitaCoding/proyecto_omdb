@@ -33,7 +33,7 @@ def insert_data(data: list,db_name: str, table: str, info:str):
 #Consultas a BD Calificaciones
 
 def get_average_calification(id: str):
-    conexion_get_avg = Conexion(DB_CALIFICACIONES, 'SELECT SUM(calificacion) / COUNT(calificacion) as media FROM calificacion WHERE id_pelicula = ?', (id,))
+    conexion_get_avg = Conexion(DB_CALIFICACIONES, 'SELECT CAST(SUM(calificacion) AS FLOAT) / COUNT(calificacion) as media FROM calificacion WHERE id_pelicula = ?', (id,))
     response = conexion_get_avg.res
     result = formato(response)
     conexion_get_avg.con.close()

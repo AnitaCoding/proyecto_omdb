@@ -7,8 +7,6 @@ const MOVIES_URL = 'http://localhost:8000/movies'
 const COMMENTS_URL = 'http://localhost:8000/comments'
 const RATINGS_URL = 'http://localhost:8000/califications'
 
-const PRUEBA = document.getElementById('id-prueba')
-
 searchById(SELECTED_MOVIE_ID)
 getComments(SELECTED_MOVIE_ID)
 
@@ -161,7 +159,48 @@ function createComment(){
             console.log('Detalle error: ', error)
         }
     );
+
+    createRating(name, date)
 }
 
 const SEND_BUTTON = document.getElementById('send-button')
 SEND_BUTTON.addEventListener('click', createComment)
+
+function createRating(name, date){
+    const RATING_STAR = document.querySelector('input[name="rating"]:checked')
+    console.log(RATING_STAR)
+    if (RATING_STAR != null){
+        fetch(`${RATINGS_URL}`,
+        {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(
+                {
+                    //La key tiene que ser el nombre que le damos en fastapi
+                    //El value el que le damos en js
+                    id_pelicula: SELECTED_MOVIE_ID,
+                    name: name,
+                    calification: Number(RATING_STAR.value),
+                    date: date
+
+                }
+            )
+        })
+    .then(response => {
+        if(!response.ok){
+            throw new Error(`Error HTTP: ${response.status}`)
+        }
+        alert('Su calificación se ha registrado.')
+    })
+    .catch(
+        error=>{
+            alert('No se ha podido registrar la calificación')
+            console.log('Detalle error: ', error)
+        }
+    );
+
+    }
+    
+}
