@@ -27,17 +27,17 @@ class ModelCalifications(ModelDB):
 
 #Getters API
 
-@app.get("/movies/{title}/{apiKey}", tags=['Movies'])
-def index(title:str, apiKey:str):
-    return get_movies(title, apiKey)
+@app.get("/movies/{title}", tags=['Movies'])
+def index(title:str):
+    return get_movies(title)
     
 @app.get("/movies/{title}/{year}/", tags=['Movies'])
-def select_movies_year(title:str, year:str, apiKey:str):
-    return get_movies_by_year(title, year, apiKey)
+def select_movies_year(title:str, year:str):
+    return get_movies_by_year(title, year)
 
-@app.get("/movies/{imdb_id}", tags=['Movies'])
-def select_movie_by_id(imdb_id: str, apiKey:str):
-    return get_movie_by_id(imdb_id, apiKey)
+@app.get("/movies/id/{imdb_id}", tags=['Movies'])
+def select_movie_by_id(imdb_id: str):
+    return get_movie_by_id(imdb_id)
 
 #Getters BD
 

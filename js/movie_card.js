@@ -1,9 +1,7 @@
 const PARAMS = new URLSearchParams(window.location.search);
 const SELECTED_MOVIE_ID = PARAMS.get('imdbID')
 
-const APIKEY_VALUE = '43dd9755'
-
-const MOVIES_URL = 'http://localhost:8000/movies'
+const MOVIES_URL = 'http://localhost:8000/movies/id'
 const COMMENTS_URL = 'http://localhost:8000/comments'
 const RATINGS_URL = 'http://localhost:8000/califications'
 
@@ -75,7 +73,7 @@ function showMovie(data){
 }
 
 function searchById(id){
-    const URL = `${MOVIES_URL}/${id}?apiKey=${APIKEY_VALUE}`;
+    const URL = `${MOVIES_URL}/${id}`;
     fetch(URL)
     .then(response => response.json())
     .then(data =>{

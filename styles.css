@@ -19,9 +19,6 @@ div .control > button {
     flex: 1;
 }
 
-.poster{
-    width: 64px;
-}
 
 div > .card{
     display: flex;

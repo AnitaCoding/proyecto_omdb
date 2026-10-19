@@ -1,5 +1,3 @@
-const APIKEY_VALUE = '43dd9755'
-
 const MOVIES_URL = 'http://localhost:8000/movies'
 
 const TITLE_INPUT = document.getElementById('title-input')
@@ -52,10 +50,10 @@ function getMoviesBySearch(){
 function set_url(){
     let searchUrl = ''
     if(YEAR_INPUT.value.length == 0){
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${APIKEY_VALUE}`
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}`
 
     }else{
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}/?apiKey=APIKEY_VALUE`
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}`
     }
     return searchUrl
 }
