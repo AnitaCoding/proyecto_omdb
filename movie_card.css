@@ -1,0 +1,112 @@
+
+.movie-card-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.div-movie-card{
+    display: flex;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 2rem
+}
+
+.movie-content{
+    padding-left: 1rem;
+}
+.icon {
+    font-size: 1.3rem;
+}
+
+#opinion-form, #div-comment{
+    padding: 1rem 0;
+    width: 70%;
+    align-self: center;
+}
+
+#title-comments-list{
+    margin: 0;
+    padding: 0.5rem 0 1rem;
+}
+
+.comment-container{
+    border-bottom: 1px solid lightgray;
+    padding: 1rem 0;
+}
+
+.comment-header{
+    display: flex;
+    padding-bottom: 0.5rem;
+}
+
+.div-comment-header{
+    display: flex;
+    align-items: center;
+    margin-right: 2rem;
+}
+
+.div-comment-header > span:first-child{
+    margin-right: 0.5rem;
+}
+
+.comment-username{
+    font-weight: bold;
+}
+
+/*row-reverse invierte el orden visual. 
+Así, aunque el HTML esté escrito de 5 a 1, en pantalla las estrellas se ven de izquierda a derecha como 1, 2, 3, 4, 5. 
+Este orden permite colorear también las estrellas anteriores a la que señalas.*/
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+.rating > label{
+    padding: 0 0.1rem;
+}
+
+/*position: absolute los saca del flujo normal de la fila para que no ocupen sitio entre las estrellas.
+opacity: 0 los hace invisibles, pero siguen siendo controles reales: el navegador puede guardar cuál está seleccionado.
+pointer-events: none evita que el input invisible interfiera con el clic. Al pulsar su label, se activa el input asociado.*/
+
+.rating input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/*color: #c9ced6 pone todas las estrellas en gris claro cuando no están seleccionadas ni señaladas con el cursor. El icono de Font Awesome 
+toma ese color.
+cursor: pointer muestra la mano al pasar el cursor, indicando que se puede hacer clic.
+*/
+.rating label {
+    color: #c9ced6;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+/*.rating label:hover colorea la estrella que estás señalando.
+~ label selecciona las etiquetas que aparecen después de esa etiqueta en el HTML.
+Como la fila está invertida visualmente con row-reverse, esas etiquetas posteriores son las estrellas que se ven a su izquierda. Por eso se colorean la estrella señalada y las anteriores.
+*/
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #f5b301;
+}
+
+/*.rating:not(:hover) se aplica cuando el cursor ya no está sobre el componente.
+input:checked encuentra el radio seleccionado.
+~ label selecciona las etiquetas que vienen después de ese radio en el HTML, incluida su etiqueta inmediata. Con el orden inverso, 
+son la estrella elegida y las anteriores.
+El color amarillo indica la selección guardada. */
+.rating:not(:hover) input:checked ~ label {
+    color: #f5b301;
+}
+
+@media (min-width: 1024px) {
+  .movie-card-container{
+    width: 70%;
+  }
+}

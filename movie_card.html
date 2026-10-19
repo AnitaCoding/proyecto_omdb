@@ -6,6 +6,7 @@
     <title>OMDB API</title>   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="movie_card.css">
 </head>
 <body>
     <header class="hero is-primary">
@@ -14,9 +15,9 @@
         </div>
     </header>
     <section>
-        <div class="container">
-            <div class="card">
-                <div class="card-image">
+        <div class="container movie-card-container">
+            <div class="div-movie-card">
+                <div>
                     <figure>
                         <img id="movie-poster"
                             src=""
@@ -24,7 +25,7 @@
                         />
                     </figure>
                 </div>
-                <div class="card-content">
+                <div class="movie-content">
                     <div class="media">
                         <div class="media-content">
                             <p id="movie-title" class="title is-4"></p>
