@@ -5,14 +5,20 @@ const MOVIES_URL = 'http://localhost:8000/movies/id'
 const COMMENTS_URL = 'http://localhost:8000/comments'
 const RATINGS_URL = 'http://localhost:8000/califications'
 
-//Busca la pelícuña por su id
+//Busca la película por su id
 function searchById(id){
     const URL = `${MOVIES_URL}/${id}`;
     fetch(URL)
     .then(response => response.json())
     .then(data =>{
         showMovie(data)
-    }).catch(error=> console.log("Error al cargar los datos: ", error))
+    }).catch(error=> {
+        const MOVIE_CARD = document.getElementById('movie-card')
+        MOVIE_CARD.innerHTML = `<div class="notification is-danger is-light">
+                                        <p>Error al cargar los datos</p>
+                                    </div>`
+        console.log("Error al cargar los datos: ", error)
+    })
 }
 
 //Muestra los datos de la película
@@ -38,7 +44,9 @@ function showMovie(data){
     MOVIE_ACTORS.innerHTML = `<strong>Reparto:</strong> ${data.Actors}`
     MOVIE_AWARDS.innerHTML = `<strong>Premios:</strong> ${data.Awards}`
     
-    showGenres(data['Genre'])
+    if(data['Genre'] != null && data['Genre'].length != 0){
+        showGenres(data['Genre'])
+    }
     getRatings(SELECTED_MOVIE_ID)
 }
 
@@ -50,7 +58,6 @@ function showGenres(genres){
     for(i = 0; i < genresArray.length ; i++){
         genresSpan += `<span class="tag is-dark">${genresArray[i]}</span>`
     }
-
     GENRES_TAGS.innerHTML = genresSpan
 }
 
@@ -61,7 +68,7 @@ function getGenres(data){
     for (i = 0; i < genres.length; i++){
         result.push(genres[i].trim())
     }
-     return result
+    return result
 }
 
 //Obtiene las calificaciones
@@ -76,7 +83,12 @@ function getRatings(imdb_id){
             SPAN_RATING.textContent = `${data[0].media.toFixed(2)}`
         }
     })
-    .catch(error=> console.log("Error al cargar los datos: ", error))
+    .catch(error=> {
+        console.log("Error al cargar los datos: ", error)
+        SPAN_RATING.innerHTML = `<div class="notification is-danger is-light">
+                                        <p>Error al cargar los datos</p>
+                                    </div>`
+    })
 }
 
 //Obtiene los comentarios
@@ -117,7 +129,12 @@ function getComments(imdb_id){
                                     </div>`
         }
         DIV_COMMENT.innerHTML = comments    
-    }).catch(error=> console.log("Error al cargar los datos: ", error))
+    }).catch(error=> {
+        DIV_COMMENT.innerHTML = `<div class="notification is-danger is-light">
+                                        <p>Error al cargar las reseñas</p>
+                                    </div>`
+        console.log("Error al cargar los datos: ", error)
+    })
 }
 
 searchById(SELECTED_MOVIE_ID)
@@ -151,11 +168,23 @@ function createComment(){
             if(!response.ok){
                 throw new Error(`Error HTTP: ${response.status}`)
             }
-            alert('Su comentario ha quedado registrado.')
+            alert('Su reseña se ha registrado.')
+            /*Swal.fire({
+                title: 'Éxito!',
+                text: 'Su comentario ha quedado registrado.',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            })*/
         })
         .catch(
             error=>{
-                alert('No se ha podido registrar el comentario')
+                /*Swal.fire({
+                    title: 'Error!',
+                    text: 'Su comentario no se ha guardado.',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })*/
+                alert('No se ha podido registrar su reseña')
                 console.log('Detalle error: ', error)
             }
         );

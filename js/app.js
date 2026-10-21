@@ -44,9 +44,13 @@ function getMoviesBySearch(){
                                     </div>`
         }else{
             showSearchResults(data)
-
         }  
-    }).catch(error=> console.log("Error al cargar los datos: ", error))
+    }).catch(error=> {
+        console.log("Error al cargar los datos: ", error)
+        MOVIES_LIST.innerHTML = `<div class="notification is-danger is-light">
+                                        <p>Error al cargar los datos</p>
+                                    </div>`
+    })
 }
 
 //Setea URL según si hay año o no en la búsqueda
