@@ -39,12 +39,11 @@ def select_movies_year(title:str, year:str):
 def select_movie_by_id(imdb_id: str):
     return get_movie_by_id(imdb_id)
 
-#Getters BD
+#Getters BD comments
 
 @app.get("/comments/{imdb_id}", tags=['Comments'])
 def get_comments(imdb_id:str):
     return select_by_id(imdb_id)
-
 
 #Setters BD comments
 

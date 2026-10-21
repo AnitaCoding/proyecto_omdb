@@ -5,8 +5,9 @@ const YEAR_INPUT = document.getElementById('year-input')
 const SEARCH_BTN = document.getElementById('search-button')
 const MOVIES_LIST = document.getElementById('movies-list')
 
+//Muestra los resultados de la búsqueda
 function showSearchResults(data){
-    let movieBox = '';
+    let movieBox = `<h2 class="subtitle is-2">Resultados para '${TITLE_INPUT.value}'</h2>`;
         data['Search'].forEach(element => {            
             movieBox += `<div class="box" id =${element.imdbID}>
                         <article class="media">
@@ -30,8 +31,10 @@ function showSearchResults(data){
 
 SEARCH_BTN.addEventListener('click', getMoviesBySearch)
 
+//Realiza la búsqueda.
+//Si encuentra, lanza resultados. Si no, informa al usuario
 function getMoviesBySearch(){
-    const URL = set_url()
+    const URL = setUrl()
     fetch(URL)
     .then(response => response.json())
     .then(data => {
@@ -46,8 +49,8 @@ function getMoviesBySearch(){
     }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
-//Una función que controle si hay año o no. Si hay año, que lo añada a la búsqueda. 
-function set_url(){
+//Setea URL según si hay año o no en la búsqueda
+function setUrl(){
     let searchUrl = ''
     if(YEAR_INPUT.value.length == 0){
         searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}`
@@ -58,24 +61,20 @@ function set_url(){
     return searchUrl
 }
 
-//Una función que setee la palabra buscada en sesion storage para que si le da a atrás, 
-function getMovieById(){
+//Captura el id de la película seleccionada
+function getMovieId(){
     const ALL_MOVIES_CARDS = MOVIES_LIST.querySelectorAll('div.box')
     for (let i = 0; i < ALL_MOVIES_CARDS.length; i++){
-        //acceso a recorrido del contenido de tabla por posición con función onclick
-        //rows es una propiedad de la etiqueta table, que a su vez, tiene la propiedad onclick
-        //onclick es un método que se puede asociar a cualquier elemento
         ALL_MOVIES_CARDS[i].onclick = function(){
             let id = ALL_MOVIES_CARDS[i].id;
-            //searchById(id)
-           // getComments(id)
-           goToMovieCard(id)
+            goToMovieCard(id)
         }
     }
 }
 
-MOVIES_LIST.addEventListener('click', getMovieById)
+MOVIES_LIST.addEventListener('click', getMovieId)
 
+//Navega al documento movie_card.html
 function goToMovieCard(imdbID){
     const PARAMS = new URLSearchParams({imdbID});
 

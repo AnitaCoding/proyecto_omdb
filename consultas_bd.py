@@ -20,6 +20,16 @@ def select_by_id(id: str):
     conexion_select_by.con.close()
     return result
 
+#Consultas a BD Calificaciones
+
+def get_average_calification(id: str):
+    conexion_get_avg = Conexion(DB_CALIFICACIONES, 'SELECT CAST(SUM(calificacion) AS FLOAT) / COUNT(calificacion) as media FROM calificacion WHERE id_pelicula = ?', (id,))
+    response = conexion_get_avg.res
+    result = formato(response)
+    conexion_get_avg.con.close()
+    return result
+
+#POST a BD
 
 def insert_data(data: list,db_name: str, table: str, info:str):
     try:
@@ -29,12 +39,3 @@ def insert_data(data: list,db_name: str, table: str, info:str):
     except sqlite3.Error as error:
         print(error)
     conexion_insert.con.close()
-
-#Consultas a BD Calificaciones
-
-def get_average_calification(id: str):
-    conexion_get_avg = Conexion(DB_CALIFICACIONES, 'SELECT CAST(SUM(calificacion) AS FLOAT) / COUNT(calificacion) as media FROM calificacion WHERE id_pelicula = ?', (id,))
-    response = conexion_get_avg.res
-    result = formato(response)
-    conexion_get_avg.con.close()
-    return result

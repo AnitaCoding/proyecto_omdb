@@ -1,51 +1,22 @@
 const PARAMS = new URLSearchParams(window.location.search);
-const SELECTED_MOVIE_ID = PARAMS.get('imdbID')
+const SELECTED_MOVIE_ID = PARAMS.get('imdbID') //Obtiene la id de la URL
 
 const MOVIES_URL = 'http://localhost:8000/movies/id'
 const COMMENTS_URL = 'http://localhost:8000/comments'
 const RATINGS_URL = 'http://localhost:8000/califications'
 
-searchById(SELECTED_MOVIE_ID)
-getComments(SELECTED_MOVIE_ID)
-
-function getGenres(data){
-    let genres = data.split(',')
-    let result = []
-    for (i = 0; i < genres.length; i++){
-        result.push(genres[i].trim())
-    }
-     return result
-}
-
-function showGenres(genres){
-    let genresArray = getGenres(genres)
-    const GENRES_TAGS = document.getElementById('genres-tags')
-    let genresSpan = ''
-    for(i = 0; i < genresArray.length ; i++){
-        genresSpan += `<span class="tag is-dark">${genresArray[i]}</span>`
-    }
-
-    GENRES_TAGS.innerHTML = genresSpan
-}
-
-function getRatings(imdb_id){
-    //Seleccionamos el cuerpo de la tabla
-    const SPAN_RATING = document.getElementById('span-rating')
-    //Petición http GET usando FetchAPI
-    fetch(`${RATINGS_URL}/${imdb_id}`)
+//Busca la pelícuña por su id
+function searchById(id){
+    const URL = `${MOVIES_URL}/${id}`;
+    fetch(URL)
     .then(response => response.json())
-    .then(data => {
-        if(data[0].media == null){
-            console.log('Esta película todavía no tiene calificaciones')
-        }else{
-            SPAN_RATING.textContent = `${data[0].media}/5`
-        }
-    })
-    .catch(error=> console.log("Error al cargar los datos: ", error))
+    .then(data =>{
+        showMovie(data)
+    }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
+//Muestra los datos de la película
 function showMovie(data){
-
     const MOVIE_POSTER = document.getElementById('movie-poster')
     const MOVIE_TITLE = document.getElementById('movie-title')
     const MOVIE_INFO = document.getElementById('movie-info')
@@ -60,27 +31,55 @@ function showMovie(data){
     MOVIE_POSTER.setAttribute('alt', data.Title)
     MOVIE_TITLE.textContent = data.Title
     MOVIE_INFO.innerHTML = `${data.Year} · ${data.Runtime} · ${data.Rated}`
-    //genrestags
-    MOVIE_RELEASED.textContent = `Fecha de estreno: ${data.Released}`
+    MOVIE_RELEASED.innerHTML = `<strong>Fecha de estreno:</strong> ${data.Released}`
     MOVIE_PLOT.textContent = data.Plot
-    MOVIE_DIRECTION.textContent = `Dirección: ${data.Director}`
-    MOVIE_WRITER.textContent = `Guión: ${data.Writer}`
-    MOVIE_ACTORS.textContent = `Reparto: ${data.Actors}`
-    MOVIE_AWARDS.textContent = `Premios: ${data.Awards}`
+    MOVIE_DIRECTION.innerHTML = `<strong>Dirección:</strong> ${data.Director}`
+    MOVIE_WRITER.innerHTML = `<strong>Guión:</strong> ${data.Writer}`
+    MOVIE_ACTORS.innerHTML = `<strong>Reparto:</strong> ${data.Actors}`
+    MOVIE_AWARDS.innerHTML = `<strong>Premios:</strong> ${data.Awards}`
     
     showGenres(data['Genre'])
     getRatings(SELECTED_MOVIE_ID)
 }
 
-function searchById(id){
-    const URL = `${MOVIES_URL}/${id}`;
-    fetch(URL)
-    .then(response => response.json())
-    .then(data =>{
-        showMovie(data)
-    }).catch(error=> console.log("Error al cargar los datos: ", error))
+//Muestra los géneros
+function showGenres(genres){
+    let genresArray = getGenres(genres)
+    const GENRES_TAGS = document.getElementById('genres-tags')
+    let genresSpan = ''
+    for(i = 0; i < genresArray.length ; i++){
+        genresSpan += `<span class="tag is-dark">${genresArray[i]}</span>`
+    }
+
+    GENRES_TAGS.innerHTML = genresSpan
 }
 
+//Obtiene los géneros
+function getGenres(data){
+    let genres = data.split(',')
+    let result = []
+    for (i = 0; i < genres.length; i++){
+        result.push(genres[i].trim())
+    }
+     return result
+}
+
+//Obtiene las calificaciones
+function getRatings(imdb_id){
+    const SPAN_RATING = document.getElementById('span-rating')
+    fetch(`${RATINGS_URL}/${imdb_id}`)
+    .then(response => response.json())
+    .then(data => {
+        if(data[0].media == null || data[0].media == 0){
+            SPAN_RATING.textContent = `Esta película todavía no tiene calificaciones`
+        }else{
+            SPAN_RATING.textContent = `${data[0].media.toFixed(2)}`
+        }
+    })
+    .catch(error=> console.log("Error al cargar los datos: ", error))
+}
+
+//Obtiene los comentarios
 function getComments(imdb_id){
     const DIV_COMMENT = document.getElementById('div-comment')
     fetch(`${COMMENTS_URL}/${imdb_id}`)
@@ -114,20 +113,23 @@ function getComments(imdb_id){
             });
         }else{
             comments += `<div class="notification is-warning is-light">
-                                        <p>Todavía no hay comentarios para esta película, se el primero en comentar.</p>
+                                        <p>Todavía no hay reseñas para esta película, se el primero en comentar.</p>
                                     </div>`
         }
         DIV_COMMENT.innerHTML = comments    
     }).catch(error=> console.log("Error al cargar los datos: ", error))
 }
 
+searchById(SELECTED_MOVIE_ID)
+getComments(SELECTED_MOVIE_ID)
+
+//Crea un comentario
 function createComment(){
     //Capturar datos
     let imdbId = SELECTED_MOVIE_ID
     let name = document.getElementById('nombre').value
     let message = document.getElementById('message').value
     let date = new Date().toISOString().split('T')[0];
-
     fetch(`${COMMENTS_URL}`,
         {
             method: 'POST',
@@ -145,25 +147,22 @@ function createComment(){
                 }
             )
         })
-    .then(response => {
-        if(!response.ok){
-            throw new Error(`Error HTTP: ${response.status}`)
-        }
-        alert('Su comentario ha quedado registrado.')
-    })
-    .catch(
-        error=>{
-            alert('No se ha podido registrar el comentario')
-            console.log('Detalle error: ', error)
-        }
-    );
-
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+            alert('Su comentario ha quedado registrado.')
+        })
+        .catch(
+            error=>{
+                alert('No se ha podido registrar el comentario')
+                console.log('Detalle error: ', error)
+            }
+        );
     createRating(name, date)
 }
 
-const SEND_BUTTON = document.getElementById('send-button')
-SEND_BUTTON.addEventListener('click', createComment)
-
+//Crea una calificación
 function createRating(name, date){
     const RATING_STAR = document.querySelector('input[name="rating"]:checked')
     console.log(RATING_STAR)
@@ -182,23 +181,24 @@ function createRating(name, date){
                     name: name,
                     calification: Number(RATING_STAR.value),
                     date: date
-
                 }
             )
         })
-    .then(response => {
-        if(!response.ok){
-            throw new Error(`Error HTTP: ${response.status}`)
-        }
-        alert('Su calificación se ha registrado.')
-    })
-    .catch(
-        error=>{
-            alert('No se ha podido registrar la calificación')
-            console.log('Detalle error: ', error)
-        }
-    );
-
-    }
-    
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`Error HTTP: ${response.status}`)
+            }
+            alert('Su calificación se ha registrado.')
+        })
+        .catch(
+            error=>{
+                alert('No se ha podido registrar la calificación')
+                console.log('Detalle error: ', error)
+            }
+        );
+    }   
 }
+
+const SEND_BUTTON = document.getElementById('send-button')
+SEND_BUTTON.addEventListener('click', createComment)
+

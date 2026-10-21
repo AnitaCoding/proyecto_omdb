@@ -110,3 +110,23 @@ El color amarillo indica la selección guardada. */
     width: 70%;
   }
 }
+
+@media (max-width: 425px) {
+  .div-movie-card{
+    flex-direction: column;
+  }
+
+  .movie-content{
+    padding: 0 1rem;
+  }
+
+  figure{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 2rem;
+  }
+
+  figure > img{
+    width: 60%;
+  }
+}
