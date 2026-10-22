@@ -45,26 +45,35 @@ function setUrl(title, year){
     return searchUrl
 }
 
+//Informa de lo ocurrido cuando algo falla
+function notificationSomethingWasWrong(element, text){
+    element.innerHTML = `<div class="notification is-danger is-light">
+                            <p>${text}</p>
+                        </div>`
+
+}
+
 //Realiza la búsqueda.
 //Si encuentra, lanza resultados. Si no, informa al usuario
 function getMoviesBySearch(title, year){
-    const URL = setUrl(title, year)
-    fetch(URL)
-    .then(response => response.json())
-    .then(data => {
-        if(data['Response'] == 'False' || data['detail'] == 'Not Found'){
-            MOVIES_LIST.innerHTML = `<div class="notification is-danger is-light">
-                                        <p>Sin resultados. Prueba a buscar otro título.</p>
-                                    </div>`
-        }else{
-            showSearchResults(data, title)
-        }  
-    }).catch(error=> {
-        console.log("Error al cargar los datos: ", error)
-        MOVIES_LIST.innerHTML = `<div class="notification is-danger is-light">
-                                        <p>Error al cargar los datos</p>
-                                    </div>`
-    })
+    if(title.length == 0){
+        notificationSomethingWasWrong(MOVIES_LIST, 'Es obligatorio introducir al menos una palabra en el campo "título"')
+    }else{    
+        const URL = setUrl(title, year)
+        fetch(URL)
+        .then(response => response.json())
+        .then(data => {
+            if(data['Response'] == 'False' || data['detail'] == 'Not Found'){
+                notificationSomethingWasWrong(MOVIES_LIST, 'Sin resultados. Prueba a buscar otro título.')
+
+            }else{
+                showSearchResults(data, title)
+            }  
+        }).catch(error=> {
+            console.log("Error al cargar los datos: ", error)
+            notificationSomethingWasWrong(MOVIES_LIST, 'Error al cargar los datos')
+        })
+    }
 }
 
 //Encapsulo getMoviesBySearch en arrow function para poder pasarle parámetros y que

@@ -87,9 +87,10 @@ function getRatings(imdb_id){
     })
     .catch(error=> {
         console.log("Error al cargar los datos: ", error)
-        SPAN_RATING.innerHTML = `<div class="notification is-danger is-light">
-                                        <p>Error al cargar los datos</p>
-                                    </div>`
+        notificationSomethingWasWrong(SPAN_RATING, 'Error al cargar los datos')
+        /*SPAN_RATING.innerHTML = `<div class="notification is-danger is-light">
+                                        <p></p>
+                                    </div>`*/
     })
 }
 
@@ -146,11 +147,12 @@ getComments(SELECTED_MOVIE_ID)
 //Crea un comentario
 function createComment(){
     //Capturar datos
-    let imdbId = SELECTED_MOVIE_ID
-    let name = document.getElementById('nombre').value
-    let message = document.getElementById('message').value
-    let date = new Date().toISOString().split('T')[0];
-    fetch(`${COMMENTS_URL}`,
+    const imdbId = SELECTED_MOVIE_ID
+    const name = document.getElementById('nombre').value
+    const message = document.getElementById('message').value
+    const date = new Date().toISOString().split('T')[0];
+    if(name.length > 0 && message.length >0){
+        fetch(`${COMMENTS_URL}`,
         {
             method: 'POST',
             headers:{
@@ -171,22 +173,25 @@ function createComment(){
             if(!response.ok){
                 throw new Error(`Error HTTP: ${response.status}`)
             }
-            alert('Su reseña se ha registrado.')
+            alert('Su reseña se ha registrado.')            
         })
         .catch(
-            error=>{
-            
+            error=>{           
                 alert('No se ha podido registrar su reseña')
                 console.log('Detalle error: ', error)
             }
         );
     createRating(name, date)
+    cleanForm()
+    }else{
+
+    }
+    
 }
 
 //Crea una calificación
 function createRating(name, date){
     const RATING_STAR = document.querySelector('input[name="rating"]:checked')
-    console.log(RATING_STAR)
     if (RATING_STAR != null){
         fetch(`${RATINGS_URL}`,
         {
@@ -218,6 +223,15 @@ function createRating(name, date){
             }
         );
     }   
+}
+
+function cleanForm(){
+    document.getElementById('nombre').value = ''
+    document.getElementById('message').value = ''
+    document.querySelectorAll('input[name="rating"]').forEach(star => {
+        star.checked = false
+    })
+
 }
 
 const SEND_BUTTON = document.getElementById('send-button')
