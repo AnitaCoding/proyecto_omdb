@@ -10,8 +10,8 @@ let title_url = ''
 let year_url = ''
 
 //Muestra los resultados de la búsqueda
-function showSearchResults(data){
-    let movieBox = `<h2 class="subtitle is-2">Resultados para '${TITLE_INPUT.value}'</h2>`;
+function showSearchResults(data, title){
+    let movieBox = `<h2 class="subtitle is-2">Resultados para '${title}'</h2>`;
         data['Search'].forEach(element => {            
             movieBox += `<div class="box" id =${element.imdbID}>
                         <article class="media">
@@ -34,21 +34,21 @@ function showSearchResults(data){
 }
 
 //Setea URL según si hay año o no en la búsqueda
-function setUrl(){
+function setUrl(title, year){
     let searchUrl = ''
     if(YEAR_INPUT.value.length == 0){
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}`
+        searchUrl = `${MOVIES_URL}/${title}`
 
     }else{
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}`
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${year}`
     }
     return searchUrl
 }
 
 //Realiza la búsqueda.
 //Si encuentra, lanza resultados. Si no, informa al usuario
-function getMoviesBySearch(){
-    const URL = setUrl()
+function getMoviesBySearch(title, year){
+    const URL = setUrl(title, year)
     fetch(URL)
     .then(response => response.json())
     .then(data => {
@@ -57,7 +57,7 @@ function getMoviesBySearch(){
                                         <p>Sin resultados. Prueba a buscar otro título.</p>
                                     </div>`
         }else{
-            showSearchResults(data)
+            showSearchResults(data, title)
         }  
     }).catch(error=> {
         console.log("Error al cargar los datos: ", error)
@@ -67,14 +67,17 @@ function getMoviesBySearch(){
     })
 }
 
-SEARCH_BTN.addEventListener('click', getMoviesBySearch)
+//Encapsulo getMoviesBySearch en arrow function para poder pasarle parámetros y que
+//no salte el listener al cargar la página.
+//De esta manera, los input quedan limpios si el usuario pincha en resultados en movie_card
+SEARCH_BTN.addEventListener('click', () => getMoviesBySearch(TITLE_INPUT.value, YEAR_INPUT.value))
 
 if (INDEX_PARAMS.has('title')){
-    TITLE_INPUT.value = INDEX_PARAMS.get('title')
+    title_url = INDEX_PARAMS.get('title')
     if(INDEX_PARAMS.has('year')){
-        YEAR_INPUT.value = INDEX_PARAMS.get('year')
+        year_url = INDEX_PARAMS.get('year')
     }
-    getMoviesBySearch()
+    getMoviesBySearch(title_url, year_url)
 }
 
 //Captura el id de la película seleccionada
