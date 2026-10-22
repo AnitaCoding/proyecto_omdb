@@ -5,17 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OMDB API</title>   
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="movie_card.css">
+    <link rel="stylesheet" href="static/styles/styles.css">
+    <link rel="stylesheet" href="static/styles/movie_card.css">
 </head>
 <body>
     <header class="hero is-primary">
-        <div class="content">
+        <a href="index.html">
+            <div class="content header">
             <h1>OMDB API</h1>
-        </div>
+            </div>
+        </a>
     </header>
     <section>
         <div class="container movie-card-container">
+            <nav class="breadcrumb is-small" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="index.html">Buscador</a></li>
+                    <li><a id="breadcrumb-results" onclick="goToResults()">Resultados</a></li>
+                    <li><a href="#"><strong id="breadcrumb-title"></strong></a></li>
+                </ul>
+            </nav>
             <div id="movie-card" class="div-movie-card">
                 <div>
                     <figure>
@@ -104,7 +113,7 @@
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/movie_card.js"></script>
+    <script src="static/js/movie_card.js"></script>
     <script src="https://kit.fontawesome.com/deb332e293.js" crossorigin="anonymous"></script>
 
 </body>

@@ -1,9 +1,13 @@
 const MOVIES_URL = 'http://localhost:8000/movies'
 
+const INDEX_PARAMS = new URLSearchParams(window.location.search)
 const TITLE_INPUT = document.getElementById('title-input')
 const YEAR_INPUT = document.getElementById('year-input')
 const SEARCH_BTN = document.getElementById('search-button')
 const MOVIES_LIST = document.getElementById('movies-list')
+
+let title_url = ''
+let year_url = ''
 
 //Muestra los resultados de la búsqueda
 function showSearchResults(data){
@@ -29,7 +33,17 @@ function showSearchResults(data){
     MOVIES_LIST.innerHTML = movieBox;  
 }
 
-SEARCH_BTN.addEventListener('click', getMoviesBySearch)
+//Setea URL según si hay año o no en la búsqueda
+function setUrl(){
+    let searchUrl = ''
+    if(YEAR_INPUT.value.length == 0){
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}`
+
+    }else{
+        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}`
+    }
+    return searchUrl
+}
 
 //Realiza la búsqueda.
 //Si encuentra, lanza resultados. Si no, informa al usuario
@@ -38,7 +52,7 @@ function getMoviesBySearch(){
     fetch(URL)
     .then(response => response.json())
     .then(data => {
-        if(data['Response'] == 'False'){
+        if(data['Response'] == 'False' || data['detail'] == 'Not Found'){
             MOVIES_LIST.innerHTML = `<div class="notification is-danger is-light">
                                         <p>Sin resultados. Prueba a buscar otro título.</p>
                                     </div>`
@@ -53,16 +67,14 @@ function getMoviesBySearch(){
     })
 }
 
-//Setea URL según si hay año o no en la búsqueda
-function setUrl(){
-    let searchUrl = ''
-    if(YEAR_INPUT.value.length == 0){
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}`
+SEARCH_BTN.addEventListener('click', getMoviesBySearch)
 
-    }else{
-        searchUrl = `${MOVIES_URL}/${TITLE_INPUT.value}/${YEAR_INPUT.value}`
+if (INDEX_PARAMS.has('title')){
+    TITLE_INPUT.value = INDEX_PARAMS.get('title')
+    if(INDEX_PARAMS.has('year')){
+        YEAR_INPUT.value = INDEX_PARAMS.get('year')
     }
-    return searchUrl
+    getMoviesBySearch()
 }
 
 //Captura el id de la película seleccionada
@@ -71,7 +83,7 @@ function getMovieId(){
     for (let i = 0; i < ALL_MOVIES_CARDS.length; i++){
         ALL_MOVIES_CARDS[i].onclick = function(){
             let id = ALL_MOVIES_CARDS[i].id;
-            goToMovieCard(id)
+            goToMovieCard(id, TITLE_INPUT.value, YEAR_INPUT.value)
         }
     }
 }
@@ -79,8 +91,11 @@ function getMovieId(){
 MOVIES_LIST.addEventListener('click', getMovieId)
 
 //Navega al documento movie_card.html
-function goToMovieCard(imdbID){
-    const PARAMS = new URLSearchParams({imdbID});
+function goToMovieCard(imdbID, title, year){
+    const PARAMS = new URLSearchParams({imdbID, title, year});
+    if (year.length == 0){
+        PARAMS.delete('year')
+    }
 
   // Navegamos a la página 2 con los parámetros en la URL
      window.location.href = `movie_card.html?${PARAMS.toString()}`;

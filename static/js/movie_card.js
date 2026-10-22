@@ -23,6 +23,7 @@ function searchById(id){
 
 //Muestra los datos de la película
 function showMovie(data){
+    const BREADCRUMB_TITLE = document.getElementById('breadcrumb-title')
     const MOVIE_POSTER = document.getElementById('movie-poster')
     const MOVIE_TITLE = document.getElementById('movie-title')
     const MOVIE_INFO = document.getElementById('movie-info')
@@ -33,6 +34,7 @@ function showMovie(data){
     const MOVIE_ACTORS = document.getElementById('movie-actors')
     const MOVIE_AWARDS = document.getElementById('movie-awards')
     
+    BREADCRUMB_TITLE.textContent = data.Title
     MOVIE_POSTER.setAttribute('src', data.Poster)
     MOVIE_POSTER.setAttribute('alt', data.Title)
     MOVIE_TITLE.textContent = data.Title
@@ -80,7 +82,7 @@ function getRatings(imdb_id){
         if(data[0].media == null || data[0].media == 0){
             SPAN_RATING.textContent = `Esta película todavía no tiene calificaciones`
         }else{
-            SPAN_RATING.textContent = `${data[0].media.toFixed(2)}`
+            SPAN_RATING.textContent = `${data[0].media.toFixed(2)} / 5`
         }
     })
     .catch(error=> {
@@ -90,6 +92,8 @@ function getRatings(imdb_id){
                                     </div>`
     })
 }
+
+searchById(SELECTED_MOVIE_ID)
 
 //Obtiene los comentarios
 function getComments(imdb_id){
@@ -137,7 +141,6 @@ function getComments(imdb_id){
     })
 }
 
-searchById(SELECTED_MOVIE_ID)
 getComments(SELECTED_MOVIE_ID)
 
 //Crea un comentario
@@ -169,21 +172,10 @@ function createComment(){
                 throw new Error(`Error HTTP: ${response.status}`)
             }
             alert('Su reseña se ha registrado.')
-            /*Swal.fire({
-                title: 'Éxito!',
-                text: 'Su comentario ha quedado registrado.',
-                icon: 'success',
-                confirmButtonText: 'Ok'
-            })*/
         })
         .catch(
             error=>{
-                /*Swal.fire({
-                    title: 'Error!',
-                    text: 'Su comentario no se ha guardado.',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
-                })*/
+            
                 alert('No se ha podido registrar su reseña')
                 console.log('Detalle error: ', error)
             }
@@ -230,4 +222,15 @@ function createRating(name, date){
 
 const SEND_BUTTON = document.getElementById('send-button')
 SEND_BUTTON.addEventListener('click', createComment)
+
+function goToResults(){
+    const title = PARAMS.get('title')
+    let movie_card_params = new URLSearchParams({title});
+    if (PARAMS.has('year')){
+        movie_card_params.append('year', PARAMS.get('year'))
+    }
+
+  // Navegamos a la página 2 con los parámetros en la URL
+     window.location.href = `index.html?${movie_card_params.toString()}`;
+}
 
