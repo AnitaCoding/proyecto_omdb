@@ -1,10 +1,23 @@
+/*Estas reglas y las del section hacen que el footer se pegue abajo
+cuando no hay suficientes elementos que lo empujen*/
+body{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .header{
     padding: 2rem;
 }
+
 .content > h1{
     font-size: 4rem;
     text-align: center;
     margin: 0;
+}
+
+section{
+  flex: 1;
 }
 
 .container{
@@ -17,6 +30,15 @@ div .control{
 
 div .control > button {
     flex: 1;
+}
+
+.notification{
+    display: flex;
+}
+
+.notification > .icon, #ratings-icon {
+    font-size: 1.3rem;
+    padding-right: 1rem;
 }
 
 @media (min-width: 1024px) {

@@ -48,6 +48,9 @@ function setUrl(title, year){
 //Informa de lo ocurrido cuando algo falla
 function notificationSomethingWasWrong(element, text){
     element.innerHTML = `<div class="notification is-danger is-light">
+                            <span class="icon">
+                                <i class="fa-solid fa-skull-crossbones"></i>
+                            </span>
                             <p>${text}</p>
                         </div>`
 

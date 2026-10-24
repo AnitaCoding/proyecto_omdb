@@ -130,8 +130,11 @@ function getComments(imdb_id){
             });
         }else{
             comments += `<div class="notification is-warning is-light">
-                                        <p>Todavía no hay reseñas para esta película, se el primero en comentar.</p>
-                                    </div>`
+                            <span class="icon">
+                                <i class="fa-solid fa-exclamation"></i>
+                            </span>
+                            <p>Todavía no hay reseñas para esta película, se el primero en comentar.</p>
+                        </div>`
         }
         DIV_COMMENT.innerHTML = comments    
     }).catch(error=> {
@@ -184,7 +187,13 @@ function createComment(){
     createRating(name, date)
     cleanForm()
     }else{
-
+        document.getElementById('div-notification').innerHTML = 
+                        `<div class="notification is-danger is-light">
+                            <span class="icon">
+                                <i class="fa-solid fa-skull-crossbones"></i>
+                            </span>
+                            <p>No puedes enviar tu reseña sin nombre o sin reseña</p>
+                        </div>`
     }
     
 }
