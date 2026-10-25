@@ -97,7 +97,7 @@ cd proyecto_omdb
 Crea y activa un entorno virtual en PowerShell:
 
 ```powershell
-py -m venv entorno
+python -m venv entorno
 .\entorno\Scripts\Activate.ps1
 ```
 
@@ -120,7 +120,7 @@ Este archivo está excluido del control de versiones.
 Abre una terminal en la raíz del proyecto, activa el entorno virtual y arranca el backend:
 
 ```powershell
-.\entorno\Scripts\Activate.ps1
+.\entorno\Scripts\Activate
 fastapi dev main.py
 ```
 
@@ -132,7 +132,7 @@ En una segunda terminal, desde la misma raíz del proyecto, sirve el frontend:
 py -m http.server 5500
 ```
 
-Abre `http://localhost:5500` en el navegador. También puedes usar la extensión Live Server de Visual Studio Code.
+Abre `http://localhost:5500` en el navegador. También puedes usar la extensión Live Server de Visual Studio Code. Recuerda ejecutarlo desde index.html
 
 Ejecuta el backend desde la raíz del proyecto para que encuentre los módulos y los archivos SQLite mediante sus rutas relativas. Conserva los archivos `.db` si quieres mantener las reseñas y calificaciones locales.
 
